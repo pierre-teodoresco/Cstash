@@ -95,7 +95,9 @@ void test_push_with_reallocation(void) {
     ASSERT_EQ(vec->capacity, 2);
 
     // Push au-delà de la capacité initiale
-    for (int i = 0; i < 5; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 5; i++) {
+        vector_push(vec, &i);
+    }
 
     ASSERT_EQ(vec->size, 5);
     ASSERT_TRUE(vec->capacity >= 5);
@@ -139,7 +141,9 @@ void test_pop_multiple(void) {
     CsVector* vec = vector_create(sizeof(int), 4);
 
     // Push 5 éléments
-    for (int i = 0; i < 5; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 5; i++) {
+        vector_push(vec, &i);
+    }
 
     // Pop dans l'ordre inverse
     for (int i = 4; i >= 0; i--) {
@@ -167,7 +171,9 @@ void test_pop_null_vector(void) {
 void test_get_valid_index(void) {
     CsVector* vec = vector_create(sizeof(int), 4);
 
-    for (int i = 0; i < 3; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 3; i++) {
+        vector_push(vec, &i);
+    }
 
     int* val0 = (int*)vector_get(vec, 0);
     int* val1 = (int*)vector_get(vec, 1);
@@ -222,7 +228,9 @@ void test_reserve_with_data(void) {
     CsVector* vec = vector_create(sizeof(int), 4);
 
     // Ajouter des données
-    for (int i = 0; i < 3; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 3; i++) {
+        vector_push(vec, &i);
+    }
 
     // Reserve plus de capacité
     vector_reserve(vec, 10);
@@ -241,7 +249,9 @@ void test_reserve_with_data(void) {
 void test_reserve_decrease(void) {
     CsVector* vec = vector_create(sizeof(int), 10);
 
-    for (int i = 0; i < 8; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 8; i++) {
+        vector_push(vec, &i);
+    }
 
     // Reserve moins que size (données perdues)
     vector_reserve(vec, 5);
@@ -280,7 +290,9 @@ void test_clear_empty_vector(void) {
 void test_clear_with_data(void) {
     CsVector* vec = vector_create(sizeof(int), 4);
 
-    for (int i = 0; i < 10; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 10; i++) {
+        vector_push(vec, &i);
+    }
 
     size_t capacity_before = vec->capacity;
     vector_clear(vec);
@@ -309,7 +321,9 @@ void test_clear_null_vector(void) {
 void test_shrink_to_fit_basic(void) {
     CsVector* vec = vector_create(sizeof(int), 20);
 
-    for (int i = 0; i < 5; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 5; i++) {
+        vector_push(vec, &i);
+    }
 
     ASSERT_TRUE(vec->capacity > vec->size);
 
@@ -363,7 +377,9 @@ void test_clone_empty_vector(void) {
 void test_clone_with_data(void) {
     CsVector* vec = vector_create(sizeof(int), 4);
 
-    for (int i = 0; i < 5; i++) { vector_push(vec, &i); }
+    for (int i = 0; i < 5; i++) {
+        vector_push(vec, &i);
+    }
 
     CsVector* clone = vector_clone(vec);
 
