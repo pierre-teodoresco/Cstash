@@ -1,0 +1,46 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.dylib
+*.out
+
+# Executables
+*.exe
+test_runner
+demo
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cache/
+.clangd/
+compile_commands.json
+
+# Coverage files
+*.gcda
+*.gcno
+*.gcov
+
+# Valgrind logs
+*.log
+vgcore.*
+
+# Temporary files
+*.tmp
+*.bak
