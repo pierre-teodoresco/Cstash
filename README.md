@@ -214,11 +214,11 @@ make test
 
 ## 🎨 Philosophie de conception
 
-- *Sécurité* : Gestion robuste des pointeurs `NULL` et des cas limites
-- *Généricité* : Fonctionne avec n'importe quel type via `void*` et `element_size`
-- *Performance* : Croissance exponentielle de la capacité (×2) pour minimiser les réallocations
-- *Prévisibilité* : Codes de retour explicites (`CsResult`), pas d'erreurs silencieuses
-- *Testabilité* : Suite de tests complète avec framework intégré
+- **Sécurité** : Gestion robuste des pointeurs `NULL` et des cas limites
+- **Généricité** : Fonctionne avec n'importe quel type via `void*` et `element_size`
+- **Performance** : Croissance exponentielle de la capacité (×2) pour minimiser les réallocations
+- **Prévisibilité** : Codes de retour explicites (`CsResult`), pas d'erreurs silencieuses
+- **Testabilité** : Suite de tests complète avec framework intégré
 
 ## 🔜 Roadmap
 
