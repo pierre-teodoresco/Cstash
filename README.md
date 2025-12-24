@@ -111,6 +111,7 @@ CsResult vector_shrink_to_fit(CsVector* vector);
 ```
 
 - `vector_reserve` : Réserve une capacité spécifique
+
 ⚠️ Si `capacity < size`, les données excédentaires sont perdues
 - `vector_clear` : Vide le vector (conserve la capacité)
 - `vector_shrink_to_fit` : Réduit la capacité pour correspondre à la taille
