@@ -4,7 +4,7 @@ IndentWidth: 4
 UseTab: Never
 PointerAlignment: Left
 BreakBeforeBraces: Attach
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLoopsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Never
