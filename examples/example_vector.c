@@ -1,23 +1,27 @@
 #include "cstash/result.h"
 #include "cstash/vector.h"
-
 #include <stdio.h>
 
 int main(void) {
-    CsVector* vector = cs_vector_create(sizeof(int), 10);
+    // Créer un vector d'entiers avec capacité initiale de 10
+    CsVector* vec = cs_vector_create(sizeof(int), 10);
 
-    int i = 0;
-    for (; i < 10; i++) {
-        if (cs_vector_push(vector, &i) != CS_SUCCESS) {
+    // Ajouter des éléments
+    for (int i = 0; i < 10; i++) {
+        if (cs_vector_push(vec, &i) != CS_SUCCESS) {
+            fprintf(stderr, "Erreur lors du push\n");
             return 1;
         }
     }
 
-    for (int j = 0; j < 10; j++) {
-        printf("%d ", *((int*)cs_vector_get(vector, j)));
+    // Lire les éléments
+    for (int i = 0; i < 10; i++) {
+        int* value = (int*)cs_vector_get(vec, i);
+        printf("%d ", *value);
     }
     printf("\n");
 
-    cs_vector_destroy(vector);
+    // Nettoyer
+    cs_vector_destroy(vec);
     return 0;
 }
