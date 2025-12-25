@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-CsVector* vector_create(size_t element_size, size_t capacity) {
+CsVector* cs_vector_create(size_t element_size, size_t capacity) {
     CsVector* vector = malloc(sizeof(CsVector));
     if (!vector) return NULL;
 
@@ -20,13 +20,13 @@ CsVector* vector_create(size_t element_size, size_t capacity) {
     return vector;
 }
 
-void vector_destroy(CsVector* vector) {
+void cs_vector_destroy(CsVector* vector) {
     if (!vector) return;
     free(vector->data);
     free(vector);
 }
 
-CsResult vector_reserve(CsVector* vector, size_t capacity) {
+CsResult cs_vector_reserve(CsVector* vector, size_t capacity) {
     if (!vector) return CS_NULL_POINTER;
 
     if (capacity < vector->size) vector->size = capacity;
@@ -38,12 +38,12 @@ CsResult vector_reserve(CsVector* vector, size_t capacity) {
     return CS_SUCCESS;
 }
 
-void vector_clear(CsVector* vector) {
+void cs_vector_clear(CsVector* vector) {
     if (!vector) return;
     vector->size = 0;
 }
 
-CsResult vector_shrink_to_fit(CsVector* vector) {
+CsResult cs_vector_shrink_to_fit(CsVector* vector) {
     if (!vector) return CS_NULL_POINTER;
 
     size_t new_capacity = vector->size == 0 ? 1 : vector->size;
@@ -55,12 +55,12 @@ CsResult vector_shrink_to_fit(CsVector* vector) {
     return CS_SUCCESS;
 }
 
-void* vector_get(const CsVector* vector, size_t index) {
+void* cs_vector_get(const CsVector* vector, size_t index) {
     if (!vector || index >= vector->size) return NULL;
     return (unsigned char*)vector->data + vector->element_size * index;
 }
 
-CsResult vector_push(CsVector* vector, const void* element) {
+CsResult cs_vector_push(CsVector* vector, const void* element) {
     if (!vector || !element) return CS_NULL_POINTER;
 
     if (vector->size >= vector->capacity) {
@@ -78,16 +78,16 @@ CsResult vector_push(CsVector* vector, const void* element) {
     return CS_SUCCESS;
 }
 
-void* vector_pop(CsVector* vector) {
+void* cs_vector_pop(CsVector* vector) {
     if (!vector || vector->size == 0) return NULL;
     vector->size--;
     return (unsigned char*)vector->data + vector->element_size * vector->size;
 }
 
-CsVector* vector_clone(const CsVector* vector) {
+CsVector* cs_vector_clone(const CsVector* vector) {
     if (!vector) return NULL;
 
-    CsVector* copy = vector_create(vector->element_size, vector->capacity);
+    CsVector* copy = cs_vector_create(vector->element_size, vector->capacity);
     if (!copy) return NULL;
 
     memcpy(copy->data, vector->data, vector->element_size * vector->size);

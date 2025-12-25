@@ -16,20 +16,20 @@ typedef struct {
 
 /**
  * Creates a new dynamic vector, gives ownership.
- * Destroy it with vector_destroy
+ * Destroy it with cs_vector_destroy
  * @param element_size Size in bytes of each element of the new vector
  * @param capacity Capacity of the new vector
  * @return
  *  the newly created vector
  *  | NULL if it failed
  */
-CsVector* vector_create(size_t element_size, size_t capacity);
+CsVector* cs_vector_create(size_t element_size, size_t capacity);
 
 /**
  * Destroy the given vector
  * @param vector Vector to destroy
  */
-void vector_destroy(CsVector* vector);
+void cs_vector_destroy(CsVector* vector);
 
 /**
  * Reserve capacity
@@ -41,13 +41,13 @@ void vector_destroy(CsVector* vector);
  *  | CS_NULL_POINTER
  *  | CS_ALLOCATION_FAILED
  */
-CsResult vector_reserve(CsVector* vector, size_t capacity);
+CsResult cs_vector_reserve(CsVector* vector, size_t capacity);
 
 /**
  * Clear all elements, keep capacity
  * @param vector Vector to clear
  */
-void vector_clear(CsVector* vector);
+void cs_vector_clear(CsVector* vector);
 
 /**
  * Shrink vector's capacity to match the size
@@ -57,7 +57,7 @@ void vector_clear(CsVector* vector);
  *  | CS_NULL_POINTER
  *  | CS_ALLOCATION FAILED
  */
-CsResult vector_shrink_to_fit(CsVector* vector);
+CsResult cs_vector_shrink_to_fit(CsVector* vector);
 
 /**
  * Get an element at a given index
@@ -67,7 +67,7 @@ CsResult vector_shrink_to_fit(CsVector* vector);
  *  the element at the given index
  *  | NULL if index out of bounds
  */
-void* vector_get(const CsVector* vector, size_t index);
+void* cs_vector_get(const CsVector* vector, size_t index);
 
 /**
  * Push an element at the end, do not take ownership of the element
@@ -78,7 +78,7 @@ void* vector_get(const CsVector* vector, size_t index);
  *  | CS_NULL_POINTER
  *  | CS_ALLOCATION_FAILED
  */
-CsResult vector_push(CsVector* vector, const void* element);
+CsResult cs_vector_push(CsVector* vector, const void* element);
 
 /**
  * Pop the last element
@@ -87,7 +87,7 @@ CsResult vector_push(CsVector* vector, const void* element);
  *  a volatile pointer to the popped element, will be overwritten at next push
  *  | NULL if vector is empty
  */
-void* vector_pop(CsVector* vector);
+void* cs_vector_pop(CsVector* vector);
 
 /**
  * Copy the given vector
@@ -96,6 +96,6 @@ void* vector_pop(CsVector* vector);
  *  copied vector
  *  | NULL if the given vector is null or an error occured
  */
-CsVector* vector_clone(const CsVector* vector);
+CsVector* cs_vector_clone(const CsVector* vector);
 
 #endif // VECTOR_H

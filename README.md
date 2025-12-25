@@ -81,48 +81,48 @@ typedef struct {
 #### Création et destruction
 
 ```c
-CsVector* vector_create(size_t element_size, size_t capacity);
-void vector_destroy(CsVector* vector);
+CsVector* cs_vector_create(size_t element_size, size_t capacity);
+void cs_vector_destroy(CsVector* vector);
 ```
 
-- `vector_create` : Crée un nouveau vector avec la taille d'élément et la capacité spécifiées
+- `cs_vector_create` : Crée un nouveau vector avec la taille d'élément et la capacité spécifiées
 Si `capacity == 0`, utilise `VECTOR_DEFAULT_CAPACITY` (8)
 Retourne `NULL` en cas d'échec d'allocation
-- `vector_destroy` : Libère la mémoire du vector (safe avec `NULL`)
+- `cs_vector_destroy` : Libère la mémoire du vector (safe avec `NULL`)
 
 #### Manipulation des éléments
 
 ```c
-CsResult vector_push(CsVector* vector, const void* element);
-void* vector_pop(CsVector* vector);
-void* vector_get(const CsVector* vector, size_t index);
+CsResult cs_vector_push(CsVector* vector, const void* element);
+void* cs_vector_pop(CsVector* vector);
+void* cs_vector_get(const CsVector* vector, size_t index);
 ```
 
-- `vector_push` : Ajoute un élément à la fin (réallocation automatique si nécessaire)
-- `vector_pop` : Retire et retourne le dernier élément (pointeur volatile)
-- `vector_get` : Accède à l'élément à l'index donné (retourne `NULL` si hors limites)
+- `cs_vector_push` : Ajoute un élément à la fin (réallocation automatique si nécessaire)
+- `cs_vector_pop` : Retire et retourne le dernier élément (pointeur volatile)
+- `cs_vector_get` : Accède à l'élément à l'index donné (retourne `NULL` si hors limites)
 
 #### Gestion de la capacité
 
 ```c
-CsResult vector_reserve(CsVector* vector, size_t capacity);
-void vector_clear(CsVector* vector);
-CsResult vector_shrink_to_fit(CsVector* vector);
+CsResult cs_vector_reserve(CsVector* vector, size_t capacity);
+void cs_vector_clear(CsVector* vector);
+CsResult cs_vector_shrink_to_fit(CsVector* vector);
 ```
 
-- `vector_reserve` : Réserve une capacité spécifique
+- `cs_vector_reserve` : Réserve une capacité spécifique
 
 ⚠️ Si `capacity < size`, les données excédentaires sont perdues
-- `vector_clear` : Vide le vector (conserve la capacité)
-- `vector_shrink_to_fit` : Réduit la capacité pour correspondre à la taille
+- `cs_vector_clear` : Vide le vector (conserve la capacité)
+- `cs_vector_shrink_to_fit` : Réduit la capacité pour correspondre à la taille
 
 #### Clonage
 
 ```c
-CsVector* vector_clone(const CsVector* vector);
+CsVector* cs_vector_clone(const CsVector* vector);
 ```
 
-- `vector_clone` : Crée une copie profonde du vector
+- `cs_vector_clone` : Crée une copie profonde du vector
 
 ### Codes de retour
 
@@ -145,11 +145,11 @@ typedef enum {
 
 int main(void) {
     // Créer un vector d'entiers avec capacité initiale de 10
-    CsVector* vec = vector_create(sizeof(int), 10);
+    CsVector* vec = cs_vector_create(sizeof(int), 10);
     
     // Ajouter des éléments
     for (int i = 0; i < 10; i++) {
-        if (vector_push(vec, &i) != CS_SUCCESS) {
+        if (cs_vector_push(vec, &i) != CS_SUCCESS) {
             fprintf(stderr, "Erreur lors du push\n");
             return 1;
         }
@@ -157,13 +157,13 @@ int main(void) {
     
     // Lire les éléments
     for (int i = 0; i < 10; i++) {
-        int* value = (int*)vector_get(vec, i);
+        int* value = (int*)cs_vector_get(vec, i);
         printf("%d ", *value);
     }
     printf("\n");
     
     // Nettoyer
-    vector_destroy(vec);
+    cs_vector_destroy(vec);
     return 0;
 }
 ```
@@ -178,19 +178,19 @@ typedef struct {
 } Record;
 
 int main(void) {
-    CsVector* records = vector_create(sizeof(Record), 0);
+    CsVector* records = cs_vector_create(sizeof(Record), 0);
     
     Record r1 = {1, "Alice", 3.14};
     Record r2 = {2, "Bob", 2.71};
     
-    vector_push(records, &r1);
-    vector_push(records, &r2);
+    cs_vector_push(records, &r1);
+    cs_vector_push(records, &r2);
     
     // Accéder aux données
-    Record* first = (Record*)vector_get(records, 0);
+    Record* first = (Record*)cs_vector_get(records, 0);
     printf("ID: %d, Name: %s\n", first->id, first->name);
     
-    vector_destroy(records);
+    cs_vector_destroy(records);
     return 0;
 }
 ```
