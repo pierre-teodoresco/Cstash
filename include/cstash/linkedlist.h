@@ -119,8 +119,29 @@ CsResult cs_linkedlist_push_back(CsLinkedList* linkedlist, const void* element);
  */
 CsResult cs_linkedlist_insert_at(CsLinkedList* linkedlist, const void* element, size_t index);
 
+/**
+ * Pop first element, gives ownership
+ * @param linkedlist Targeted list
+ * @return
+ *  first element
+ *  | NULL if linkedlist is empty
+ */
 void* cs_linkedlist_pop_front(CsLinkedList* linkedlist);
+
+/**
+ * Pop last element, gives ownership
+ * @param linkedlist Targeted list
+ * @return
+ *  last element
+ *  | NULL if linkedlist is empty
+ */
 void* cs_linkedlist_pop_back(CsLinkedList* linkedlist);
-void cs_linkedlist_remove_at(CsLinkedList* linkedlist, size_t index);
+
+/**
+ * Remove element at index
+ * @param linkedlist Targeted list
+ * @param index Index of element to remove
+ */
+CsResult cs_linkedlist_remove_at(CsLinkedList* linkedlist, size_t index);
 
 #endif // LINKEDLIST_H

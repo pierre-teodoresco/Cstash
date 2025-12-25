@@ -31,7 +31,7 @@ void cs_linkedlist_destroy(CsLinkedList* linkedlist) {
 }
 
 bool cs_linkedlist_is_empty(const CsLinkedList* linkedlist) {
-    return linkedlist->size == 0;
+    return !linkedlist || linkedlist->size == 0;
 }
 
 size_t cs_linkedlist_size(const CsLinkedList* linkedlist) {
@@ -66,13 +66,19 @@ void* cs_linkedlist_back(const CsLinkedList* linkedlist) {
 void* cs_linkedlist_get(const CsLinkedList* linkedlist, size_t index) {
     if (!linkedlist || index >= linkedlist->size) return NULL;
 
-    if (index == 0) return linkedlist->head->data;
-    CsNode* it = linkedlist->head;
-    for (size_t i = 0; i < index; i++) {
-        it = it->next;
+    if (index < linkedlist->size / 2) {
+        CsNode* it = linkedlist->head;
+        for (size_t i = 0; i < index; i++) {
+            it = it->next;
+        }
+        return it->data;
+    } else {
+        CsNode* it = linkedlist->tail;
+        for (size_t i = linkedlist->size - 1; i > index; i--) {
+            it = it->prev;
+        }
+        return it->data;
     }
-    if (!it) return NULL;
-    return it->data;
 }
 
 CsResult cs_linkedlist_push_front(CsLinkedList* linkedlist, const void* element) {
@@ -136,5 +142,68 @@ CsResult cs_linkedlist_insert_at(CsLinkedList* linkedlist, const void* element, 
     it->prev = new_node;
 
     linkedlist->size++;
+    return CS_SUCCESS;
+}
+
+void* cs_linkedlist_pop_front(CsLinkedList* linkedlist) {
+    if (!linkedlist || linkedlist->size == 0) return NULL;
+
+    CsNode* tmp = linkedlist->head;
+    linkedlist->head = tmp->next;
+    if (linkedlist->head) {
+        linkedlist->head->prev = NULL;
+    } else {
+        linkedlist->tail = NULL;
+    }
+    linkedlist->size--;
+
+    void* data = malloc(linkedlist->element_size);
+    memcpy(data, tmp->data, linkedlist->element_size);
+    free(tmp);
+    return data;
+}
+
+void* cs_linkedlist_pop_back(CsLinkedList* linkedlist) {
+    if (!linkedlist || linkedlist->size == 0) return NULL;
+
+    CsNode* tmp = linkedlist->tail;
+    linkedlist->tail = tmp->prev;
+    if (linkedlist->tail) {
+        linkedlist->tail->next = NULL;
+    } else {
+        linkedlist->head = NULL;
+    }
+    linkedlist->size--;
+
+    void* data = malloc(linkedlist->element_size);
+    memcpy(data, tmp->data, linkedlist->element_size);
+    free(tmp);
+    return data;
+}
+
+CsResult cs_linkedlist_remove_at(CsLinkedList* linkedlist, size_t index) {
+    if (!linkedlist) return CS_NULL_POINTER;
+    if (index >= linkedlist->size) return CS_OUT_OF_BOUNDS;
+
+    if (index == 0) {
+        void* data = cs_linkedlist_pop_front(linkedlist);
+        free(data);
+        return CS_SUCCESS;
+    } else if (index == linkedlist->size - 1) {
+        void* data = cs_linkedlist_pop_back(linkedlist);
+        free(data);
+        return CS_SUCCESS;
+    }
+
+    CsNode* it = linkedlist->head;
+    for (size_t i = 0; i < index; i++) {
+        it = it->next;
+    }
+
+    it->prev->next = it->next;
+    it->next->prev = it->prev;
+    linkedlist->size--;
+
+    free(it);
     return CS_SUCCESS;
 }
