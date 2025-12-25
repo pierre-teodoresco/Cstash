@@ -5,15 +5,17 @@
 ## 🎯 Objectifs
 
 - **Vector** : Tableau dynamique (équivalent du `std::vector` en C++) ✅
-- **LinkedList** : Liste chaînée (en développement)
+- **LinkedList** : Liste chaînée ✅
 - **HashMap** : Table de hachage (en développement)
 
 ## 📦 État actuel
 
-**Version actuelle** : v0.1.0-alpha
+**Version actuelle** : v0.2.0-alpha
 
 **Fonctionnalités disponibles** :
 - ✅ **CsVector** : Implémentation complète avec tests unitaires
+- ✅ **CsLinkedList** : Implémentation complète avec tests unitaires
+
 
 ## 🏗️ Structure du projet
 ```bash
@@ -38,7 +40,7 @@
 
 ### Prérequis
 
-- **Clang** (ou GCC compatible)
+- **Clang**
 - **Make**
 
 ### Commandes
@@ -63,138 +65,6 @@ make fclean
 make re
 ```
 
-## 📚 API - CsVector
-
-### Structure
-
-```c
-typedef struct {
-    size_t capacity;        // Capacité allouée
-    size_t size;            // Nombre d'éléments
-    size_t element_size;    // Taille d'un élément en bytes
-    void* data;             // Données
-} CsVector;
-```
-
-### Fonctions
-
-#### Création et destruction
-
-```c
-CsVector* cs_vector_create(size_t element_size, size_t capacity);
-void cs_vector_destroy(CsVector* vector);
-```
-
-- `cs_vector_create` : Crée un nouveau vector avec la taille d'élément et la capacité spécifiées
-Si `capacity == 0`, utilise `VECTOR_DEFAULT_CAPACITY` (8)
-Retourne `NULL` en cas d'échec d'allocation
-- `cs_vector_destroy` : Libère la mémoire du vector (safe avec `NULL`)
-
-#### Manipulation des éléments
-
-```c
-CsResult cs_vector_push(CsVector* vector, const void* element);
-void* cs_vector_pop(CsVector* vector);
-void* cs_vector_get(const CsVector* vector, size_t index);
-```
-
-- `cs_vector_push` : Ajoute un élément à la fin (réallocation automatique si nécessaire)
-- `cs_vector_pop` : Retire et retourne le dernier élément (pointeur volatile)
-- `cs_vector_get` : Accède à l'élément à l'index donné (retourne `NULL` si hors limites)
-
-#### Gestion de la capacité
-
-```c
-CsResult cs_vector_reserve(CsVector* vector, size_t capacity);
-void cs_vector_clear(CsVector* vector);
-CsResult cs_vector_shrink_to_fit(CsVector* vector);
-```
-
-- `cs_vector_reserve` : Réserve une capacité spécifique
-
-⚠️ Si `capacity < size`, les données excédentaires sont perdues
-- `cs_vector_clear` : Vide le vector (conserve la capacité)
-- `cs_vector_shrink_to_fit` : Réduit la capacité pour correspondre à la taille
-
-#### Clonage
-
-```c
-CsVector* cs_vector_clone(const CsVector* vector);
-```
-
-- `cs_vector_clone` : Crée une copie profonde du vector
-
-### Codes de retour
-
-```c
-typedef enum {
-    CS_SUCCESS = 0,              // Opération réussie
-    CS_NULL_POINTER = 1,         // Pointeur NULL fourni
-    CS_ALLOCATION_FAILED = 2,    // Échec d'allocation mémoire
-} CsResult;
-```
-
-## 💡 Exemples d'utilisation
-
-### Exemple basique
-
-```c
-#include "cstash/vector.h"
-#include "cstash/result.h"
-#include <stdio.h>
-
-int main(void) {
-    // Créer un vector d'entiers avec capacité initiale de 10
-    CsVector* vec = cs_vector_create(sizeof(int), 10);
-    
-    // Ajouter des éléments
-    for (int i = 0; i < 10; i++) {
-        if (cs_vector_push(vec, &i) != CS_SUCCESS) {
-            fprintf(stderr, "Erreur lors du push\n");
-            return 1;
-        }
-    }
-    
-    // Lire les éléments
-    for (int i = 0; i < 10; i++) {
-        int* value = (int*)cs_vector_get(vec, i);
-        printf("%d ", *value);
-    }
-    printf("\n");
-    
-    // Nettoyer
-    cs_vector_destroy(vec);
-    return 0;
-}
-```
-
-### Avec des structures personnalisées
-
-```c
-typedef struct {
-    int id;
-    char name[32];
-    double value;
-} Record;
-
-int main(void) {
-    CsVector* records = cs_vector_create(sizeof(Record), 0);
-    
-    Record r1 = {1, "Alice", 3.14};
-    Record r2 = {2, "Bob", 2.71};
-    
-    cs_vector_push(records, &r1);
-    cs_vector_push(records, &r2);
-    
-    // Accéder aux données
-    Record* first = (Record*)cs_vector_get(records, 0);
-    printf("ID: %d, Name: %s\n", first->id, first->name);
-    
-    cs_vector_destroy(records);
-    return 0;
-}
-```
-
 ## 🧪 Tests
 
 Le projet inclut une suite de tests complète avec un framework maison :
@@ -202,29 +72,9 @@ Le projet inclut une suite de tests complète avec un framework maison :
 ```bash
 make test
 ```
-
-### Couverture des tests
-
-- ✅ Création et destruction
-- ✅ Push, pop et get (avec réallocation)
-- ✅ Reserve, clear et shrink_to_fit
-- ✅ Clonage et indépendance
-- ✅ Types complexes (structures)
-- ✅ Tests de stress (1000+ éléments)
-- ✅ Gestion des cas limites (NULL, out of bounds, etc.)
-
-## 🎨 Philosophie de conception
-
-- **Sécurité** : Gestion robuste des pointeurs `NULL` et des cas limites
-- **Généricité** : Fonctionne avec n'importe quel type via `void*` et `element_size`
-- **Performance** : Croissance exponentielle de la capacité (×2) pour minimiser les réallocations
-- **Prévisibilité** : Codes de retour explicites (`CsResult`), pas d'erreurs silencieuses
-- **Testabilité** : Suite de tests complète avec framework intégré
-
 ## 🔜 Roadmap
 
-+ [x] *CsLinkedList* : Liste doublement chaînée
-+ [ ] *CsHashMap* : Table de hachage avec résolution de collisions
++ [x] *CsHashMap* : Table de hachage avec résolution de collisions
 + [ ] *Documentation* étendue avec plus d'exemples
 + [ ] *Benchmarks* de performance
 
