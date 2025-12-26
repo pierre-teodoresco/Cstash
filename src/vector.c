@@ -5,6 +5,8 @@
 #include <string.h>
 
 CsVector* cs_vector_create(size_t element_size, size_t capacity) {
+    if (element_size == 0) return NULL;
+
     CsVector* vector = malloc(sizeof(CsVector));
     if (!vector) return NULL;
 
