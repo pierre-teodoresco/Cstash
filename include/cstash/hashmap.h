@@ -62,7 +62,7 @@ bool cs_hashmap_has(const CsHashMap* hashmap, const char* key);
  * @param hashmap Hashmap to insert to
  * @param key String key
  * @param value The value associated to the given key
- * return
+ * @return
  *  CS_SUCCESS
  *  | CS_NULL_POINTER
  *  | CS_ALLOCATION_FAILED
