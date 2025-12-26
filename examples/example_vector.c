@@ -27,7 +27,6 @@ int main(void) {
     printf("\n=== Pop ===\n");
     int* popped = (int*)cs_vector_pop(vec);
     printf("Élément retiré: %d\n", *popped);
-    free(popped);
     printf("Nouvelle taille: %zu\n", vec->size);
 
     printf("\n=== Reserve ===\n");
