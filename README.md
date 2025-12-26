@@ -1,21 +1,12 @@
 # Cstash
 
-**Cstash** est une bibliothèque de structures de données génériques en C, inspirée des conteneurs de la STL C++. Conçue pour être simple, robuste et efficace, elle offre des structures de données réutilisables avec une API claire et cohérente.
+**Cstash** est une bibliothèque de structures de données génériques en C. Conçue pour être simple, robuste et efficace, elle offre des structures de données réutilisables avec une API claire et cohérente.
 
 ## 🎯 Objectifs
 
-- **Vector** : Tableau dynamique (équivalent du `std::vector` en C++) ✅
+- **Vector** : Tableau dynamique ✅
 - **LinkedList** : Liste chaînée ✅
-- **HashMap** : Table de hachage (en développement)
-
-## 📦 État actuel
-
-**Version actuelle** : v0.2.0-alpha
-
-**Fonctionnalités disponibles** :
-- ✅ **CsVector** : Implémentation complète avec tests unitaires
-- ✅ **CsLinkedList** : Implémentation complète avec tests unitaires
-
+- **HashMap** : Table de hachage ✅
 
 ## 🏗️ Structure du projet
 ```bash
@@ -74,7 +65,6 @@ make test
 ```
 ## 🔜 Roadmap
 
-+ [x] *CsHashMap* : Table de hachage avec résolution de collisions
 + [ ] *Documentation* étendue avec plus d'exemples
 + [ ] *Benchmarks* de performance
 
