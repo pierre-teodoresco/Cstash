@@ -144,6 +144,7 @@ help:
 	@echo "Targets:"
 	@echo "  $(GREEN)all$(NC)              - Build the library (default)"
 	@echo "  $(GREEN)test$(NC)             - Build and run tests"
+	@echo "  $(GREEN)test-sanitize         - Build library with AddressSanitizer and run test"
 	@echo "  $(GREEN)examples$(NC)         - Build example programs"
 	@echo "  $(GREEN)clean$(NC)            - Remove build artifacts"
 	@echo "  $(GREEN)fclean$(NC)           - Remove all generated files"
