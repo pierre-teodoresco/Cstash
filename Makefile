@@ -34,7 +34,7 @@ NC := \033[0m # No Color
 
 # Règle par défaut
 .PHONY: all
-all: $(LIBRARY) compile_commands.json
+all: $(LIBRARY)
 	@echo "$(GREEN)✓ Build completed successfully$(NC)"
 
 # Création du répertoire build
@@ -103,24 +103,6 @@ test-sanitize: library-sanitize
 examples: $(EXAMPLE_EXECS)
 	@echo "$(GREEN)✓ Examples compiled$(NC)"
 
-# Génération de compile_commands.json pour les IDE
-compile_commands.json: $(SOURCES)
-	@echo "$(BLUE)Generating compile_commands.json$(NC)"
-	@echo "[" > compile_commands.json
-	@first=1; \
-	for src in $(SOURCES); do \
-		if [ $$first -eq 0 ]; then echo "," >> compile_commands.json; fi; \
-		echo "  {" >> compile_commands.json; \
-		echo "    \"directory\": \"$$(pwd)\"," >> compile_commands.json; \
-		echo "    \"command\": \"$(CC) $(CFLAGS) $(INCLUDES) -c $$src\"," >> compile_commands.json; \
-		echo "    \"file\": \"$$src\"" >> compile_commands.json; \
-		echo -n "  }" >> compile_commands.json; \
-		first=0; \
-	done; \
-	echo "" >> compile_commands.json; \
-	echo "]" >> compile_commands.json
-	@echo "$(GREEN)✓ compile_commands.json generated$(NC)"
-
 # Nettoyage
 .PHONY: clean
 clean:
@@ -128,13 +110,9 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@echo "$(GREEN)✓ Clean completed$(NC)"
 
-.PHONY: fclean
-fclean: clean
-	@rm -f compile_commands.json
-
 # Re-compilation complète
 .PHONY: re
-re: fclean all
+re: all
 
 # Affichage de l'aide
 .PHONY: help
@@ -147,7 +125,6 @@ help:
 	@echo "  $(GREEN)test-sanitize         - Build library with AddressSanitizer and run test"
 	@echo "  $(GREEN)examples$(NC)         - Build example programs"
 	@echo "  $(GREEN)clean$(NC)            - Remove build artifacts"
-	@echo "  $(GREEN)fclean$(NC)           - Remove all generated files"
 	@echo "  $(GREEN)re$(NC)               - Clean and rebuild"
 	@echo "  $(GREEN)help$(NC)             - Show this help message"
 
