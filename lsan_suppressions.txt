@@ -1,4 +1,16 @@
 # Suppressions pour les leaks système macOS
-leak:libxpc.dylib
+# Runtime Objective-C
 leak:libobjc.A.dylib
+leak:_objc_msgSend
+
+# XPC (Inter-process communication)
+leak:libxpc.dylib
+leak:_xpc_collect_images
+
+# Allocateur système
 leak:libsystem_malloc.dylib
+leak:_malloc_type_malloc_outlined
+leak:_malloc_type_calloc_outlined
+
+# CoreFoundation (optionnel)
+leak:CoreFoundation
