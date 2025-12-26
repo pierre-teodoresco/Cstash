@@ -1,7 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include "cstash/result.h"
+#include "result.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
