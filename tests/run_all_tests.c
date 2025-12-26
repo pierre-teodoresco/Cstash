@@ -131,6 +131,65 @@ void test_linkedlist_push_pop_cycle(void);
 void test_linkedlist_alternating_push(void);
 void test_linkedlist_memory_leak_remove_at(void);
 
+// ==================== HASHMAP TESTS ====================
+// Création et destruction
+void test_hashmap_create_destroy(void);
+void test_hashmap_create_with_zero_size(void);
+void test_hashmap_create_with_different_types(void);
+void test_hashmap_destroy_null(void);
+
+// Insert
+void test_hashmap_insert_single(void);
+void test_hashmap_insert_multiple(void);
+void test_hashmap_insert_duplicate_key(void);
+void test_hashmap_insert_null_hashmap(void);
+void test_hashmap_insert_null_key(void);
+void test_hashmap_insert_null_value(void);
+void test_hashmap_insert_with_auto_resize(void);
+
+// Get et Has
+void test_hashmap_get_existing_key(void);
+void test_hashmap_get_non_existing_key(void);
+void test_hashmap_get_null_hashmap(void);
+void test_hashmap_get_null_key(void);
+void test_hashmap_has_existing_key(void);
+void test_hashmap_has_non_existing_key(void);
+void test_hashmap_has_null_hashmap(void);
+void test_hashmap_has_null_key(void);
+
+// Remove
+void test_hashmap_remove_existing_key(void);
+void test_hashmap_remove_non_existing_key(void);
+void test_hashmap_remove_from_bucket_chain(void);
+void test_hashmap_remove_null_hashmap(void);
+void test_hashmap_remove_null_key(void);
+
+// Clear
+void test_hashmap_clear_empty(void);
+void test_hashmap_clear_with_data(void);
+void test_hashmap_clear_null(void);
+
+// Resize
+void test_hashmap_resize_increase(void);
+void test_hashmap_resize_decrease(void);
+void test_hashmap_resize_same_capacity(void);
+void test_hashmap_resize_null_hashmap(void);
+
+// Types complexes
+void test_hashmap_with_structs(void);
+void test_hashmap_with_string_values(void);
+
+// Collisions
+void test_hashmap_collision_handling(void);
+
+// Stress tests
+void test_hashmap_large_dataset(void);
+void test_hashmap_insert_remove_cycle(void);
+void test_hashmap_key_variations(void);
+void test_hashmap_empty_string_key(void);
+void test_hashmap_long_key(void);
+void test_hashmap_overwrite_protection(void);
+
 int main(void) {
     TEST_INIT();
 
@@ -266,6 +325,66 @@ int main(void) {
     RUN_TEST(test_linkedlist_push_pop_cycle);
     RUN_TEST(test_linkedlist_alternating_push);
     RUN_TEST(test_linkedlist_memory_leak_remove_at);
+
+    printf("\n" COLOR_MAGENTA "########## HASHMAP TESTS ##########" COLOR_RESET "\n");
+
+    printf("\n" COLOR_BLUE "========== CREATION & DESTRUCTION ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_create_destroy);
+    RUN_TEST(test_hashmap_create_with_zero_size);
+    RUN_TEST(test_hashmap_create_with_different_types);
+    RUN_TEST(test_hashmap_destroy_null);
+
+    printf("\n" COLOR_BLUE "========== INSERT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_insert_single);
+    RUN_TEST(test_hashmap_insert_multiple);
+    RUN_TEST(test_hashmap_insert_duplicate_key);
+    RUN_TEST(test_hashmap_insert_null_hashmap);
+    RUN_TEST(test_hashmap_insert_null_key);
+    RUN_TEST(test_hashmap_insert_null_value);
+    RUN_TEST(test_hashmap_insert_with_auto_resize);
+
+    printf("\n" COLOR_BLUE "========== GET & HAS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_get_existing_key);
+    RUN_TEST(test_hashmap_get_non_existing_key);
+    RUN_TEST(test_hashmap_get_null_hashmap);
+    RUN_TEST(test_hashmap_get_null_key);
+    RUN_TEST(test_hashmap_has_existing_key);
+    RUN_TEST(test_hashmap_has_non_existing_key);
+    RUN_TEST(test_hashmap_has_null_hashmap);
+    RUN_TEST(test_hashmap_has_null_key);
+
+    printf("\n" COLOR_BLUE "========== REMOVE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_remove_existing_key);
+    RUN_TEST(test_hashmap_remove_non_existing_key);
+    RUN_TEST(test_hashmap_remove_from_bucket_chain);
+    RUN_TEST(test_hashmap_remove_null_hashmap);
+    RUN_TEST(test_hashmap_remove_null_key);
+
+    printf("\n" COLOR_BLUE "========== CLEAR ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_clear_empty);
+    RUN_TEST(test_hashmap_clear_with_data);
+    RUN_TEST(test_hashmap_clear_null);
+
+    printf("\n" COLOR_BLUE "========== RESIZE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_resize_increase);
+    RUN_TEST(test_hashmap_resize_decrease);
+    RUN_TEST(test_hashmap_resize_same_capacity);
+    RUN_TEST(test_hashmap_resize_null_hashmap);
+
+    printf("\n" COLOR_BLUE "========== COMPLEX TYPES ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_with_structs);
+    RUN_TEST(test_hashmap_with_string_values);
+
+    printf("\n" COLOR_BLUE "========== COLLISIONS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_collision_handling);
+
+    printf("\n" COLOR_BLUE "========== STRESS TESTS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_large_dataset);
+    RUN_TEST(test_hashmap_insert_remove_cycle);
+    RUN_TEST(test_hashmap_key_variations);
+    RUN_TEST(test_hashmap_empty_string_key);
+    RUN_TEST(test_hashmap_long_key);
+    RUN_TEST(test_hashmap_overwrite_protection);
 
     TEST_SUMMARY();
 
