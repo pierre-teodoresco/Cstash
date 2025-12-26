@@ -80,8 +80,15 @@ CsResult cs_vector_push(CsVector* vector, const void* element) {
 
 void* cs_vector_pop(CsVector* vector) {
     if (!vector || vector->size == 0) return NULL;
+
+    void* data = malloc(vector->element_size);
+    if (!data) return NULL;
+
     vector->size--;
-    return (unsigned char*)vector->data + vector->element_size * vector->size;
+    void* last = (unsigned char*)vector->data + vector->element_size * vector->size;
+    memcpy(data, last, vector->element_size);
+
+    return data;
 }
 
 CsVector* cs_vector_clone(const CsVector* vector) {

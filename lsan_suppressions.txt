@@ -1,0 +1,4 @@
+# Suppressions pour les leaks système macOS
+leak:libxpc.dylib
+leak:libobjc.A.dylib
+leak:libsystem_malloc.dylib

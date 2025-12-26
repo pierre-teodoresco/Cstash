@@ -132,6 +132,7 @@ void test_pop_single(void) {
     int* popped = (int*)cs_vector_pop(vec);
     ASSERT_NOT_NULL(popped);
     ASSERT_EQ(*popped, 99);
+    free(popped);
     ASSERT_EQ(vec->size, 0);
 
     cs_vector_destroy(vec);
@@ -150,6 +151,7 @@ void test_pop_multiple(void) {
         int* popped = (int*)cs_vector_pop(vec);
         ASSERT_NOT_NULL(popped);
         ASSERT_EQ(*popped, i);
+        free(popped);
         ASSERT_EQ(vec->size, (size_t)i);
     }
 
@@ -160,6 +162,7 @@ void test_pop_empty_vector(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     void* popped = cs_vector_pop(vec);
     ASSERT_NULL(popped);
+    free(popped);
     cs_vector_destroy(vec);
 }
 
@@ -495,6 +498,7 @@ void test_push_pop_cycle(void) {
         cs_vector_push(vec, &value);
         int* popped = (int*)cs_vector_pop(vec);
         ASSERT_EQ(*popped, cycle);
+        free(popped);
     }
 
     ASSERT_EQ(vec->size, 0);

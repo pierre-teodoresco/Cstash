@@ -15,8 +15,7 @@ typedef struct {
 } CsVector;
 
 /**
- * Creates a new dynamic vector, gives ownership.
- * Destroy it with cs_vector_destroy
+ * Creates a new dynamic vector (takes ownership)
  * @param element_size Size in bytes of each element of the new vector
  * @param capacity Capacity of the new vector
  * @return
@@ -60,7 +59,7 @@ void cs_vector_clear(CsVector* vector);
 CsResult cs_vector_shrink_to_fit(CsVector* vector);
 
 /**
- * Get an element at a given index
+ * Get an element at a given index (borrow)
  * @param vector Vector to fetch the element from
  * @param index Index of the returned element
  * @return
@@ -70,7 +69,7 @@ CsResult cs_vector_shrink_to_fit(CsVector* vector);
 void* cs_vector_get(const CsVector* vector, size_t index);
 
 /**
- * Push an element at the end, do not take ownership of the element
+ * Push an element at the end
  * @param vector Vector to push the new element to
  * @param element New element to push to the vector
  * @return
@@ -81,7 +80,7 @@ void* cs_vector_get(const CsVector* vector, size_t index);
 CsResult cs_vector_push(CsVector* vector, const void* element);
 
 /**
- * Pop the last element
+ * Pop the last element (takes ownership)
  * @param vector Vector to pop to
  * @return
  *  a volatile pointer to the popped element, will be overwritten at next push

@@ -29,6 +29,7 @@ EXAMPLE_EXECS := $(patsubst $(EXAMPLE_DIR)/%.c,$(BUILD_DIR)/examples/%,$(EXAMPLE
 GREEN := \033[0;32m
 BLUE := \033[0;34m
 YELLOW := \033[0;33m
+RED := \033[0;31m
 NC := \033[0m # No Color
 
 # Règle par défaut
@@ -72,6 +73,30 @@ test: $(TEST_EXEC)
 # Compilation et exécution des tests avec un seul make test
 .PHONY: check
 check: test
+
+# Bibliothèque avec sanitizers
+.PHONY: library-sanitize
+library-sanitize: clean
+	@echo "$(BLUE)Compiling library with sanitizers$(NC)"
+	@mkdir -p $(BUILD_DIR)
+	@for src in $(SOURCES); do \
+		obj=$(BUILD_DIR)/$$(basename $$src .c).o; \
+		$(CC) $(CFLAGS_DEBUG) $(INCLUDES) -c $$src -o $$obj; \
+	done
+	@ar rcs $(LIBRARY) $(OBJECTS)
+	@echo "$(GREEN)✓ Library with sanitizers created$(NC)"
+
+# Tests avec sanitizers
+.PHONY: test-sanitize
+test-sanitize: library-sanitize
+	@echo "$(BLUE)Compiling tests with sanitizers$(NC)"
+	@$(CC) $(CFLAGS_DEBUG) $(INCLUDES) $(TEST_RUNNER) $(TEST_SOURCES) -L$(BUILD_DIR) -lcstash -o $(TEST_EXEC)
+	@echo "$(YELLOW)Running tests with AddressSanitizer...$(NC)"
+	@MallocNanoZone=0 \
+		ASAN_OPTIONS=detect_leaks=1:print_suppressions=0 \
+		LSAN_OPTIONS=suppressions=lsan_suppressions.txt:print_suppressions=0 \
+		./$(TEST_EXEC)
+	@echo "$(GREEN)✓ No memory leaks detected$(NC)"
 
 # Compilation des exemples
 .PHONY: examples

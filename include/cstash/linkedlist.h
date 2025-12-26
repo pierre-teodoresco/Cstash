@@ -120,7 +120,7 @@ CsResult cs_linkedlist_push_back(CsLinkedList* linkedlist, const void* element);
 CsResult cs_linkedlist_insert_at(CsLinkedList* linkedlist, const void* element, size_t index);
 
 /**
- * Pop first element, gives ownership
+ * Pop first element (takes owernship)
  * @param linkedlist Targeted list
  * @return
  *  first element
@@ -129,7 +129,7 @@ CsResult cs_linkedlist_insert_at(CsLinkedList* linkedlist, const void* element, 
 void* cs_linkedlist_pop_front(CsLinkedList* linkedlist);
 
 /**
- * Pop last element, gives ownership
+ * Pop last element (takes owernship)
  * @param linkedlist Targeted list
  * @return
  *  last element
