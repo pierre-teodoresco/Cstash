@@ -62,16 +62,9 @@ make bench
 make clean
 ```
 
-## 🧪 Tests
-
-Le projet inclut une suite de tests complète avec un framework maison :
-
-```bash
-make test
-```
 ## 🔜 Roadmap
 
-+ [ ] *Benchmarks* de performance
++ [ ] *Documentation* des différentes API
 
 ## 👤 Auteur
 Fait avec ❤️ par Pierre Teodoresco
