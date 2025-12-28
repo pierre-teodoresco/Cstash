@@ -6,7 +6,7 @@
 // Tests de création et destruction
 // ========================================
 
-void test_create_destroy(void) {
+void test_vector_create_destroy(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 8);
     ASSERT_NOT_NULL(vec);
     ASSERT_EQ(vec->size, 0);
@@ -16,7 +16,7 @@ void test_create_destroy(void) {
     cs_vector_destroy(vec);
 }
 
-void test_create_with_zero_capacity(void) {
+void test_vector_create_with_zero_capacity(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 0);
     ASSERT_NOT_NULL(vec);
     ASSERT_EQ(vec->capacity, VECTOR_DEFAULT_CAPACITY);
@@ -24,7 +24,7 @@ void test_create_with_zero_capacity(void) {
     cs_vector_destroy(vec);
 }
 
-void test_create_with_different_types(void) {
+void test_vector_create_with_different_types(void) {
     // Test avec double
     CsVector* vec_double = cs_vector_create(sizeof(double), 4);
     ASSERT_NOT_NULL(vec_double);
@@ -48,7 +48,7 @@ void test_create_with_different_types(void) {
     cs_vector_destroy(vec_point);
 }
 
-void test_destroy_null(void) {
+void test_vector_destroy_null(void) {
     // Ne devrait pas crash
     cs_vector_destroy(NULL);
 }
@@ -57,7 +57,7 @@ void test_destroy_null(void) {
 // Tests de push, pop et get
 // ========================================
 
-void test_push_single(void) {
+void test_vector_push_single(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     int value = 42;
 
@@ -72,7 +72,7 @@ void test_push_single(void) {
     cs_vector_destroy(vec);
 }
 
-void test_push_multiple(void) {
+void test_vector_push_multiple(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     for (int i = 0; i < 10; i++) {
@@ -90,7 +90,7 @@ void test_push_multiple(void) {
     cs_vector_destroy(vec);
 }
 
-void test_push_with_reallocation(void) {
+void test_vector_push_with_reallocation(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 2);
     ASSERT_EQ(vec->capacity, 2);
 
@@ -111,20 +111,20 @@ void test_push_with_reallocation(void) {
     cs_vector_destroy(vec);
 }
 
-void test_push_null_vector(void) {
+void test_vector_push_null_vector(void) {
     int value = 42;
     CsResult result = cs_vector_push(NULL, &value);
     ASSERT_EQ(result, CS_NULL_POINTER);
 }
 
-void test_push_null_element(void) {
+void test_vector_push_null_element(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     CsResult result = cs_vector_push(vec, NULL);
     ASSERT_EQ(result, CS_NULL_POINTER);
     cs_vector_destroy(vec);
 }
 
-void test_pop_single(void) {
+void test_vector_pop_single(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     int value = 99;
     cs_vector_push(vec, &value);
@@ -138,7 +138,7 @@ void test_pop_single(void) {
     cs_vector_destroy(vec);
 }
 
-void test_pop_multiple(void) {
+void test_vector_pop_multiple(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     // Push 5 éléments
@@ -158,7 +158,7 @@ void test_pop_multiple(void) {
     cs_vector_destroy(vec);
 }
 
-void test_pop_empty_vector(void) {
+void test_vector_pop_empty_vector(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     void* popped = cs_vector_pop(vec);
     ASSERT_NULL(popped);
@@ -166,12 +166,12 @@ void test_pop_empty_vector(void) {
     cs_vector_destroy(vec);
 }
 
-void test_pop_null_vector(void) {
+void test_vector_pop_null_vector(void) {
     void* popped = cs_vector_pop(NULL);
     ASSERT_NULL(popped);
 }
 
-void test_get_valid_index(void) {
+void test_vector_get_valid_index(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     for (int i = 0; i < 3; i++) {
@@ -192,7 +192,7 @@ void test_get_valid_index(void) {
     cs_vector_destroy(vec);
 }
 
-void test_get_out_of_bounds(void) {
+void test_vector_get_out_of_bounds(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     int value = 42;
     cs_vector_push(vec, &value);
@@ -206,7 +206,7 @@ void test_get_out_of_bounds(void) {
     cs_vector_destroy(vec);
 }
 
-void test_get_null_vector(void) {
+void test_vector_get_null_vector(void) {
     void* result = cs_vector_get(NULL, 0);
     ASSERT_NULL(result);
 }
@@ -215,7 +215,7 @@ void test_get_null_vector(void) {
 // Tests de reserve
 // ========================================
 
-void test_reserve_increase(void) {
+void test_vector_reserve_increase(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     ASSERT_EQ(vec->capacity, 4);
 
@@ -227,7 +227,7 @@ void test_reserve_increase(void) {
     cs_vector_destroy(vec);
 }
 
-void test_reserve_with_data(void) {
+void test_vector_reserve_with_data(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     // Ajouter des données
@@ -249,7 +249,7 @@ void test_reserve_with_data(void) {
     cs_vector_destroy(vec);
 }
 
-void test_reserve_decrease(void) {
+void test_vector_reserve_decrease(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 10);
 
     for (int i = 0; i < 8; i++) {
@@ -270,7 +270,7 @@ void test_reserve_decrease(void) {
     cs_vector_destroy(vec);
 }
 
-void test_reserve_null_vector(void) {
+void test_vector_reserve_null_vector(void) {
     CsResult result = cs_vector_reserve(NULL, 10);
     ASSERT_EQ(result, CS_NULL_POINTER);
 }
@@ -279,7 +279,7 @@ void test_reserve_null_vector(void) {
 // Tests de clear
 // ========================================
 
-void test_clear_empty_vector(void) {
+void test_vector_clear_empty_vector(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     size_t original_capacity = vec->capacity;
 
@@ -290,7 +290,7 @@ void test_clear_empty_vector(void) {
     cs_vector_destroy(vec);
 }
 
-void test_clear_with_data(void) {
+void test_vector_clear_with_data(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     for (int i = 0; i < 10; i++) {
@@ -312,7 +312,7 @@ void test_clear_with_data(void) {
     cs_vector_destroy(vec);
 }
 
-void test_clear_null_vector(void) {
+void test_vector_clear_null_vector(void) {
     // Ne devrait pas crash
     cs_vector_clear(NULL);
 }
@@ -321,7 +321,7 @@ void test_clear_null_vector(void) {
 // Tests de shrink_to_fit
 // ========================================
 
-void test_shrink_to_fit_basic(void) {
+void test_vector_shrink_to_fit_basic(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 20);
 
     for (int i = 0; i < 5; i++) {
@@ -344,7 +344,7 @@ void test_shrink_to_fit_basic(void) {
     cs_vector_destroy(vec);
 }
 
-void test_shrink_to_fit_empty(void) {
+void test_vector_shrink_to_fit_empty(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 10);
 
     CsResult result = cs_vector_shrink_to_fit(vec);
@@ -354,7 +354,7 @@ void test_shrink_to_fit_empty(void) {
     cs_vector_destroy(vec);
 }
 
-void test_shrink_to_fit_null_vector(void) {
+void test_vector_shrink_to_fit_null_vector(void) {
     CsResult result = cs_vector_shrink_to_fit(NULL);
     ASSERT_EQ(result, CS_NULL_POINTER);
 }
@@ -363,7 +363,7 @@ void test_shrink_to_fit_null_vector(void) {
 // Tests de clone
 // ========================================
 
-void test_clone_empty_vector(void) {
+void test_vector_clone_empty_vector(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 8);
     CsVector* clone = cs_vector_clone(vec);
 
@@ -377,7 +377,7 @@ void test_clone_empty_vector(void) {
     cs_vector_destroy(clone);
 }
 
-void test_clone_with_data(void) {
+void test_vector_clone_with_data(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     for (int i = 0; i < 5; i++) {
@@ -407,12 +407,12 @@ void test_clone_with_data(void) {
     cs_vector_destroy(clone);
 }
 
-void test_clone_null_vector(void) {
+void test_vector_clone_null_vector(void) {
     CsVector* clone = cs_vector_clone(NULL);
     ASSERT_NULL(clone);
 }
 
-void test_clone_independence(void) {
+void test_vector_clone_independence(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
     int value = 42;
     cs_vector_push(vec, &value);
@@ -466,7 +466,7 @@ void test_vector_with_structs(void) {
 // Tests de stress
 // ========================================
 
-void test_large_vector(void) {
+void test_vector_large(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 4);
 
     // Push 1000 éléments
@@ -489,7 +489,7 @@ void test_large_vector(void) {
     cs_vector_destroy(vec);
 }
 
-void test_push_pop_cycle(void) {
+void test_vector_push_pop_cycle(void) {
     CsVector* vec = cs_vector_create(sizeof(int), 2);
 
     // Cycle de push/pop
@@ -503,4 +503,67 @@ void test_push_pop_cycle(void) {
 
     ASSERT_EQ(vec->size, 0);
     cs_vector_destroy(vec);
+}
+
+// ========================================
+// Main
+// ========================================
+
+int main(void) {
+    TEST_INIT();
+
+    printf("\n" COLOR_MAGENTA "########## VECTOR TESTS ##########" COLOR_RESET "\n");
+
+    printf("\n" COLOR_BLUE "========== CREATION & DESTRUCTION ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_create_destroy);
+    RUN_TEST(test_vector_create_with_zero_capacity);
+    RUN_TEST(test_vector_create_with_different_types);
+    RUN_TEST(test_vector_destroy_null);
+
+    printf("\n" COLOR_BLUE "========== PUSH, POP & GET ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_push_single);
+    RUN_TEST(test_vector_push_multiple);
+    RUN_TEST(test_vector_push_with_reallocation);
+    RUN_TEST(test_vector_push_null_vector);
+    RUN_TEST(test_vector_push_null_element);
+    RUN_TEST(test_vector_pop_single);
+    RUN_TEST(test_vector_pop_multiple);
+    RUN_TEST(test_vector_pop_empty_vector);
+    RUN_TEST(test_vector_pop_null_vector);
+    RUN_TEST(test_vector_get_valid_index);
+    RUN_TEST(test_vector_get_out_of_bounds);
+    RUN_TEST(test_vector_get_null_vector);
+
+    printf("\n" COLOR_BLUE "========== RESERVE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_reserve_increase);
+    RUN_TEST(test_vector_reserve_with_data);
+    RUN_TEST(test_vector_reserve_decrease);
+    RUN_TEST(test_vector_reserve_null_vector);
+
+    printf("\n" COLOR_BLUE "========== CLEAR ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_clear_empty_vector);
+    RUN_TEST(test_vector_clear_with_data);
+    RUN_TEST(test_vector_clear_null_vector);
+
+    printf("\n" COLOR_BLUE "========== SHRINK TO FIT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_shrink_to_fit_basic);
+    RUN_TEST(test_vector_shrink_to_fit_empty);
+    RUN_TEST(test_vector_shrink_to_fit_null_vector);
+
+    printf("\n" COLOR_BLUE "========== CLONE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_clone_empty_vector);
+    RUN_TEST(test_vector_clone_with_data);
+    RUN_TEST(test_vector_clone_null_vector);
+    RUN_TEST(test_vector_clone_independence);
+
+    printf("\n" COLOR_BLUE "========== COMPLEX TYPES ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_with_structs);
+
+    printf("\n" COLOR_BLUE "========== STRESS TESTS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_vector_large);
+    RUN_TEST(test_vector_push_pop_cycle);
+
+    TEST_SUMMARY();
+
+    return tests_failed > 0 ? 1 : 0;
 }

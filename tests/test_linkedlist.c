@@ -728,3 +728,97 @@ void test_linkedlist_memory_leak_remove_at(void) {
 
     cs_linkedlist_destroy(list);
 }
+
+// ========================================
+// Main
+// ========================================
+
+int main(void) {
+    TEST_INIT();
+
+    printf("\n" COLOR_MAGENTA "########## LINKEDLIST TESTS ##########" COLOR_RESET "\n");
+
+    printf("\n" COLOR_BLUE "========== CREATION & DESTRUCTION ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_create_destroy);
+    RUN_TEST(test_linkedlist_create_with_zero_size);
+    RUN_TEST(test_linkedlist_create_with_different_types);
+    RUN_TEST(test_linkedlist_destroy_null);
+
+    printf("\n" COLOR_BLUE "========== IS_EMPTY & SIZE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_is_empty_on_new_list);
+    RUN_TEST(test_linkedlist_is_empty_after_push);
+    RUN_TEST(test_linkedlist_is_empty_null);
+    RUN_TEST(test_linkedlist_size_empty);
+    RUN_TEST(test_linkedlist_size_after_operations);
+    RUN_TEST(test_linkedlist_size_null);
+
+    printf("\n" COLOR_BLUE "========== PUSH FRONT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_push_front_single);
+    RUN_TEST(test_linkedlist_push_front_multiple);
+    RUN_TEST(test_linkedlist_push_front_null_list);
+    RUN_TEST(test_linkedlist_push_front_null_element);
+
+    printf("\n" COLOR_BLUE "========== PUSH BACK ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_push_back_single);
+    RUN_TEST(test_linkedlist_push_back_multiple);
+    RUN_TEST(test_linkedlist_push_back_null_list);
+    RUN_TEST(test_linkedlist_push_back_null_element);
+
+    printf("\n" COLOR_BLUE "========== INSERT AT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_insert_at_beginning);
+    RUN_TEST(test_linkedlist_insert_at_end);
+    RUN_TEST(test_linkedlist_insert_at_middle);
+    RUN_TEST(test_linkedlist_insert_at_out_of_bounds);
+    RUN_TEST(test_linkedlist_insert_at_null_list);
+    RUN_TEST(test_linkedlist_insert_at_null_element);
+
+    printf("\n" COLOR_BLUE "========== POP FRONT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_pop_front_single);
+    RUN_TEST(test_linkedlist_pop_front_multiple);
+    RUN_TEST(test_linkedlist_pop_front_empty);
+    RUN_TEST(test_linkedlist_pop_front_null);
+
+    printf("\n" COLOR_BLUE "========== POP BACK ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_pop_back_single);
+    RUN_TEST(test_linkedlist_pop_back_multiple);
+    RUN_TEST(test_linkedlist_pop_back_empty);
+    RUN_TEST(test_linkedlist_pop_back_null);
+
+    printf("\n" COLOR_BLUE "========== FRONT, BACK & GET ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_front_single);
+    RUN_TEST(test_linkedlist_front_empty);
+    RUN_TEST(test_linkedlist_front_null);
+    RUN_TEST(test_linkedlist_back_single);
+    RUN_TEST(test_linkedlist_back_empty);
+    RUN_TEST(test_linkedlist_back_null);
+    RUN_TEST(test_linkedlist_get_valid_indices);
+    RUN_TEST(test_linkedlist_get_out_of_bounds);
+    RUN_TEST(test_linkedlist_get_null_list);
+    RUN_TEST(test_linkedlist_get_bidirectional_optimization);
+
+    printf("\n" COLOR_BLUE "========== REMOVE AT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_remove_at_beginning);
+    RUN_TEST(test_linkedlist_remove_at_end);
+    RUN_TEST(test_linkedlist_remove_at_middle);
+    RUN_TEST(test_linkedlist_remove_at_single_element);
+    RUN_TEST(test_linkedlist_remove_at_out_of_bounds);
+    RUN_TEST(test_linkedlist_remove_at_null_list);
+
+    printf("\n" COLOR_BLUE "========== CLEAR ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_clear_empty);
+    RUN_TEST(test_linkedlist_clear_with_data);
+    RUN_TEST(test_linkedlist_clear_null);
+
+    printf("\n" COLOR_BLUE "========== COMPLEX TYPES ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_with_structs);
+
+    printf("\n" COLOR_BLUE "========== STRESS TESTS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_linkedlist_large_list);
+    RUN_TEST(test_linkedlist_push_pop_cycle);
+    RUN_TEST(test_linkedlist_alternating_push);
+    RUN_TEST(test_linkedlist_memory_leak_remove_at);
+
+    TEST_SUMMARY();
+
+    return tests_failed > 0 ? 1 : 0;
+}

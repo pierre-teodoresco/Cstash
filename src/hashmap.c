@@ -99,21 +99,21 @@ CsResult cs_hashmap_insert(CsHashMap* hashmap, const char* key, const void* valu
         hashmap->buckets[index] = cs_hashmap_new_entry(key, value, hashmap->value_size);
         if (!hashmap->buckets[index]) return CS_ALLOCATION_FAILED;
         hashmap->size++;
-        return CS_SUCCESS;
-    }
-
-    while (bucket) {
-        if (strcmp(bucket->key, key) == 0) {
-            return CS_CONFLICT;
+    } else {
+        while (bucket) {
+            if (strcmp(bucket->key, key) == 0) {
+                return CS_CONFLICT;
+            }
+            if (!bucket->next) break;
+            bucket = bucket->next;
         }
-        if (!bucket->next) break;
-        bucket = bucket->next;
+
+        bucket->next = cs_hashmap_new_entry(key, value, hashmap->value_size);
+        if (!bucket->next) return CS_ALLOCATION_FAILED;
+        hashmap->size++;
     }
 
-    bucket->next = cs_hashmap_new_entry(key, value, hashmap->value_size);
-    if (!bucket->next) return CS_ALLOCATION_FAILED;
-    hashmap->size++;
-
+    // Vérifier le load factor après TOUTE insertion
     float load_factor = (float)hashmap->size / hashmap->capacity;
     if (load_factor > HASHMAP_MAX_LOAD_FACTOR) {
         cs_hashmap_resize(hashmap, hashmap->capacity * 2);

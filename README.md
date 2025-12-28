@@ -4,16 +4,19 @@
 
 ## 🎯 Objectifs
 
-- **Vector** : Tableau dynamique ✅
-- **LinkedList** : Liste chaînée ✅
-- **HashMap** : Table de hachage ✅
+- **Vector** : Tableau dynamique  ✅
+- **LinkedList** : Liste chaînée  ✅
+- **HashMap** : Table de hachage  ✅
+- **Stack** : Pile                ✅
 
 ## 🏗️ Structure du projet
 ```bash
 ├── Makefile
 ├── README.md
 ├── build
-│   ├── compilation results
+│   └── compilation results
+├── benchmarks
+│  └── bench_*.c
 ├── examples
 │   └── example_*.c
 ├── include
@@ -40,20 +43,23 @@
 # Compiler la bibliothèque
 make
 
-# Compiler et exécuter les tests
+# Compiler les tests (à retrouver sous build/tests)
 make test
 
-# Compiler les exemples
+# Exécuter tous les tests
+make testr-run
+
+# Compiler et exécuter les tests avec une validation mémoire
+make test-sanitize
+
+# Compiler les exemples (à retouver dans build/examples)
 make examples
+
+# Compiler les benchmarks (à retrouver dans build/benchmarks)
+make bench
 
 # Nettoyer les artefacts de build
 make clean
-
-# Nettoyer complètement (y compris compile_commands.json)
-make fclean
-
-# Recompiler entièrement
-make re
 ```
 
 ## 🧪 Tests
@@ -65,7 +71,6 @@ make test
 ```
 ## 🔜 Roadmap
 
-+ [ ] *Documentation* étendue avec plus d'exemples
 + [ ] *Benchmarks* de performance
 
 ## 👤 Auteur

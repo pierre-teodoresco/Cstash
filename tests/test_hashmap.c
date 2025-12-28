@@ -640,3 +640,75 @@ void test_hashmap_overwrite_protection(void) {
 
     cs_hashmap_destroy(map);
 }
+
+// ========================================
+// Main
+// ========================================
+
+int main(void) {
+    TEST_INIT();
+
+    printf("\n" COLOR_MAGENTA "########## HASHMAP TESTS ##########" COLOR_RESET "\n");
+
+    printf("\n" COLOR_BLUE "========== CREATION & DESTRUCTION ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_create_destroy);
+    RUN_TEST(test_hashmap_create_with_zero_size);
+    RUN_TEST(test_hashmap_create_with_different_types);
+    RUN_TEST(test_hashmap_destroy_null);
+
+    printf("\n" COLOR_BLUE "========== INSERT ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_insert_single);
+    RUN_TEST(test_hashmap_insert_multiple);
+    RUN_TEST(test_hashmap_insert_duplicate_key);
+    RUN_TEST(test_hashmap_insert_null_hashmap);
+    RUN_TEST(test_hashmap_insert_null_key);
+    RUN_TEST(test_hashmap_insert_null_value);
+    RUN_TEST(test_hashmap_insert_with_auto_resize);
+
+    printf("\n" COLOR_BLUE "========== GET & HAS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_get_existing_key);
+    RUN_TEST(test_hashmap_get_non_existing_key);
+    RUN_TEST(test_hashmap_get_null_hashmap);
+    RUN_TEST(test_hashmap_get_null_key);
+    RUN_TEST(test_hashmap_has_existing_key);
+    RUN_TEST(test_hashmap_has_non_existing_key);
+    RUN_TEST(test_hashmap_has_null_hashmap);
+    RUN_TEST(test_hashmap_has_null_key);
+
+    printf("\n" COLOR_BLUE "========== REMOVE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_remove_existing_key);
+    RUN_TEST(test_hashmap_remove_non_existing_key);
+    RUN_TEST(test_hashmap_remove_from_bucket_chain);
+    RUN_TEST(test_hashmap_remove_null_hashmap);
+    RUN_TEST(test_hashmap_remove_null_key);
+
+    printf("\n" COLOR_BLUE "========== CLEAR ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_clear_empty);
+    RUN_TEST(test_hashmap_clear_with_data);
+    RUN_TEST(test_hashmap_clear_null);
+
+    printf("\n" COLOR_BLUE "========== RESIZE ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_resize_increase);
+    RUN_TEST(test_hashmap_resize_decrease);
+    RUN_TEST(test_hashmap_resize_same_capacity);
+    RUN_TEST(test_hashmap_resize_null_hashmap);
+
+    printf("\n" COLOR_BLUE "========== COMPLEX TYPES ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_with_structs);
+    RUN_TEST(test_hashmap_with_string_values);
+
+    printf("\n" COLOR_BLUE "========== COLLISIONS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_collision_handling);
+
+    printf("\n" COLOR_BLUE "========== STRESS TESTS ==========" COLOR_RESET "\n");
+    RUN_TEST(test_hashmap_large_dataset);
+    RUN_TEST(test_hashmap_insert_remove_cycle);
+    RUN_TEST(test_hashmap_key_variations);
+    RUN_TEST(test_hashmap_empty_string_key);
+    RUN_TEST(test_hashmap_long_key);
+    RUN_TEST(test_hashmap_overwrite_protection);
+
+    TEST_SUMMARY();
+
+    return tests_failed > 0 ? 1 : 0;
+}

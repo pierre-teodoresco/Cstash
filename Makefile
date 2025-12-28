@@ -19,16 +19,15 @@ LIBRARY := $(BUILD_DIR)/libcstash.a
 
 # Tests
 TEST_SOURCES := $(wildcard $(TEST_DIR)/test_*.c)
-TEST_RUNNER := $(TEST_DIR)/run_all_tests.c
-TEST_EXEC := $(BUILD_DIR)/run_tests
+TEST_EXECS := $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/$(TEST_DIR)/%,$(TEST_SOURCES))
 
 # Exemples
 EXAMPLE_SOURCES := $(wildcard $(EXAMPLE_DIR)/*.c)
-EXAMPLE_EXECS := $(patsubst $(EXAMPLE_DIR)/%.c,$(BUILD_DIR)/examples/%,$(EXAMPLE_SOURCES))
+EXAMPLE_EXECS := $(patsubst $(EXAMPLE_DIR)/%.c,$(BUILD_DIR)/$(EXAMPLE_DIR)/%,$(EXAMPLE_SOURCES))
 
 # Benchmarks
 BENCHMARK_SOURCES := $(wildcard $(BENCHMARK_DIR)/*.c)
-BENCHMARK_EXECS := $(patsubst $(BENCHMARK_DIR)/%.c,$(BUILD_DIR)/benchmarks/%,$(BENCHMARK_SOURCES))
+BENCHMARK_EXECS := $(patsubst $(BENCHMARK_DIR)/%.c,$(BUILD_DIR)/$(BENCHMARK_DIR)/%,$(BENCHMARK_SOURCES))
 
 # Couleurs pour l'affichage
 GREEN := \033[0;32m
@@ -45,8 +44,6 @@ all: $(LIBRARY)
 # Création du répertoire build
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
-	@mkdir -p $(BUILD_DIR)/$(EXAMPLE_DIR)
-	@mkdir -p $(BUILD_DIR)/$(BENCHMARK_DIR)
 
 # Compilation des fichiers objets
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
@@ -60,26 +57,37 @@ $(LIBRARY): $(OBJECTS)
 	@echo "$(GREEN)✓ Library created$(NC)"
 
 # Compilation des tests
-$(TEST_EXEC): $(LIBRARY) $(TEST_SOURCES) $(TEST_RUNNER)
-	@echo "$(BLUE)Compiling tests$(NC)"
-	@$(CC) $(CFLAGS_DEBUG) $(INCLUDES) $(TEST_RUNNER) $(TEST_SOURCES) -L$(BUILD_DIR) -lcstash -o $@
-	@echo "$(GREEN)✓ Tests compiled$(NC)"
+$(BUILD_DIR)/tests/%: $(TEST_DIR)/%.c $(LIBRARY)
+	@mkdir -p $(BUILD_DIR)/tests
+	@echo "$(BLUE)Compiling test$(NC) $<"
+	@$(CC) $(CFLAGS_DEBUG) $(INCLUDES) $< -L$(BUILD_DIR) -lcstash -o $@
 
 # Compilation des exemples
-$(BUILD_DIR)/examples/%: $(EXAMPLE_DIR)/%.c $(LIBRARY) | $(BUILD_DIR)
+$(BUILD_DIR)/examples/%: $(EXAMPLE_DIR)/%.c $(LIBRARY)
+	@mkdir -p $(BUILD_DIR)/examples
 	@echo "$(BLUE)Compiling example$(NC) $<"
 	@$(CC) $(CFLAGS) $(INCLUDES) $< -L$(BUILD_DIR) -lcstash -o $@
 
 # Compilation des benchmarks
 $(BUILD_DIR)/benchmarks/%: $(BENCHMARK_DIR)/%.c $(LIBRARY) | $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/benchmarks
 	@echo "$(BLUE)Compiling benchmark$(NC) $<"
 	@$(CC) $(CFLAGS) $(INCLUDES) $< -L$(BUILD_DIR) -lcstash -o $@
 
-# Exécution des tests
+# Compilation des tests
 .PHONY: test
-test: $(TEST_EXEC)
+test: $(TEST_EXECS)
+	@echo "$(GREEN)✓ Tests compiled$(NC)"
+
+# Exécution des tests
+.PHONY: test-run
+test-run: test
 	@echo "$(YELLOW)Running tests...$(NC)"
-	@./$(TEST_EXEC)
+	@for test in $(TEST_EXECS); do \
+		echo "$(BLUE)Running$$NC $$test"; \
+		./$$test; \
+		echo ""; \
+	done
 
 # Bibliothèque avec sanitizers
 .PHONY: library-sanitize
@@ -95,14 +103,15 @@ library-sanitize: clean
 
 # Tests avec sanitizers
 .PHONY: test-sanitize
-test-sanitize: library-sanitize
-	@echo "$(BLUE)Compiling tests with sanitizers$(NC)"
-	@$(CC) $(CFLAGS_DEBUG) $(INCLUDES) $(TEST_RUNNER) $(TEST_SOURCES) -L$(BUILD_DIR) -lcstash -o $(TEST_EXEC)
+test-sanitize: library-sanitize $(TEST_EXECS)
 	@echo "$(YELLOW)Running tests with AddressSanitizer...$(NC)"
-	@MallocNanoZone=0 \
+	@for test in $(TEST_EXECS); do \
+		echo "$(BLUE)Running sanitized test:$(NC) $$test"; \
+		MallocNanoZone=0 \
 		ASAN_OPTIONS=detect_leaks=1:print_suppressions=0 \
 		LSAN_OPTIONS=suppressions=lsan_suppressions.txt:print_suppressions=0 \
-		./$(TEST_EXEC)
+		./$$test; \
+	done
 	@echo "$(GREEN)✓ No memory leaks detected$(NC)"
 
 # Compilation des exemples
@@ -114,16 +123,6 @@ examples: $(EXAMPLE_EXECS)
 .PHONY: bench
 bench: $(BENCHMARK_EXECS)
 	@echo "$(GREEN)✓ Benchmarks compiled$(NC)"
-
-# Exécution des benchmarks
-.PHONY: bench-run
-bench-run: bench
-	@echo "$(YELLOW)Running benchmarks...$(NC)"
-	@for bench in $(BENCHMARK_EXECS); do \
-		echo "$(BLUE)Running$$NC $$bench"; \
-		./$$bench; \
-		echo ""; \
-	done
 
 # Nettoyage
 .PHONY: clean
@@ -139,11 +138,11 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo "  $(GREEN)all$(NC)              - Build the library (default)"
-	@echo "  $(GREEN)test$(NC)             - Build and run tests"
+	@echo "  $(GREEN)test$(NC)             - Build tests"
+	@echo "  $(GREEN)test-run$(NC)         - Run all tests"
 	@echo "  $(GREEN)test-sanitize         - Build library with AddressSanitizer and run test"
 	@echo "  $(GREEN)examples$(NC)         - Build example programs"
-	@echo "  $(GREEN)bench$(NC)            - Compile benchmarks"
-	@echo "  $(GREEN)bench-run$(NC)        - Run all benchmarks"
+	@echo "  $(GREEN)bench$(NC)            - Build benchmarks"
 	@echo "  $(GREEN)clean$(NC)            - Remove build artifacts"
 	@echo "  $(GREEN)help$(NC)             - Show this help message"
 
