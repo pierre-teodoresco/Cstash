@@ -10,6 +10,7 @@ BUILD_DIR := build
 INCLUDE_DIR := include
 TEST_DIR := tests
 EXAMPLE_DIR := examples
+BENCHMARK_DIR := benchmarks
 
 # Fichiers
 SOURCES := $(wildcard $(SRC_DIR)/*.c)
@@ -24,6 +25,10 @@ TEST_EXEC := $(BUILD_DIR)/run_tests
 # Exemples
 EXAMPLE_SOURCES := $(wildcard $(EXAMPLE_DIR)/*.c)
 EXAMPLE_EXECS := $(patsubst $(EXAMPLE_DIR)/%.c,$(BUILD_DIR)/examples/%,$(EXAMPLE_SOURCES))
+
+# Benchmarks
+BENCHMARK_SOURCES := $(wildcard $(BENCHMARK_DIR)/*.c)
+BENCHMARK_EXECS := $(patsubst $(BENCHMARK_DIR)/%.c,$(BUILD_DIR)/benchmarks/%,$(BENCHMARK_SOURCES))
 
 # Couleurs pour l'affichage
 GREEN := \033[0;32m
@@ -40,7 +45,8 @@ all: $(LIBRARY)
 # Création du répertoire build
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
-	@mkdir -p $(BUILD_DIR)/examples
+	@mkdir -p $(BUILD_DIR)/$(EXAMPLE_DIR)
+	@mkdir -p $(BUILD_DIR)/$(BENCHMARK_DIR)
 
 # Compilation des fichiers objets
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
@@ -64,15 +70,16 @@ $(BUILD_DIR)/examples/%: $(EXAMPLE_DIR)/%.c $(LIBRARY) | $(BUILD_DIR)
 	@echo "$(BLUE)Compiling example$(NC) $<"
 	@$(CC) $(CFLAGS) $(INCLUDES) $< -L$(BUILD_DIR) -lcstash -o $@
 
+# Compilation des benchmarks
+$(BUILD_DIR)/benchmarks/%: $(BENCHMARK_DIR)/%.c $(LIBRARY) | $(BUILD_DIR)
+	@echo "$(BLUE)Compiling benchmark$(NC) $<"
+	@$(CC) $(CFLAGS) $(INCLUDES) $< -L$(BUILD_DIR) -lcstash -o $@
+
 # Exécution des tests
 .PHONY: test
 test: $(TEST_EXEC)
 	@echo "$(YELLOW)Running tests...$(NC)"
 	@./$(TEST_EXEC)
-
-# Compilation et exécution des tests avec un seul make test
-.PHONY: check
-check: test
 
 # Bibliothèque avec sanitizers
 .PHONY: library-sanitize
@@ -103,16 +110,27 @@ test-sanitize: library-sanitize
 examples: $(EXAMPLE_EXECS)
 	@echo "$(GREEN)✓ Examples compiled$(NC)"
 
+# Compilation des benchmarks
+.PHONY: bench
+bench: $(BENCHMARK_EXECS)
+	@echo "$(GREEN)✓ Benchmarks compiled$(NC)"
+
+# Exécution des benchmarks
+.PHONY: bench-run
+bench-run: bench
+	@echo "$(YELLOW)Running benchmarks...$(NC)"
+	@for bench in $(BENCHMARK_EXECS); do \
+		echo "$(BLUE)Running$$NC $$bench"; \
+		./$$bench; \
+		echo ""; \
+	done
+
 # Nettoyage
 .PHONY: clean
 clean:
 	@echo "$(YELLOW)Cleaning build artifacts$(NC)"
 	@rm -rf $(BUILD_DIR)
 	@echo "$(GREEN)✓ Clean completed$(NC)"
-
-# Re-compilation complète
-.PHONY: re
-re: all
 
 # Affichage de l'aide
 .PHONY: help
@@ -124,8 +142,9 @@ help:
 	@echo "  $(GREEN)test$(NC)             - Build and run tests"
 	@echo "  $(GREEN)test-sanitize         - Build library with AddressSanitizer and run test"
 	@echo "  $(GREEN)examples$(NC)         - Build example programs"
+	@echo "  $(GREEN)bench$(NC)            - Compile benchmarks"
+	@echo "  $(GREEN)bench-run$(NC)        - Run all benchmarks"
 	@echo "  $(GREEN)clean$(NC)            - Remove build artifacts"
-	@echo "  $(GREEN)re$(NC)               - Clean and rebuild"
 	@echo "  $(GREEN)help$(NC)             - Show this help message"
 
 # Dépendances automatiques
