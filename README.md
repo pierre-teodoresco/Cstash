@@ -47,7 +47,7 @@ make
 make test
 
 # Exécuter tous les tests
-make testr-run
+make test-run
 
 # Compiler et exécuter les tests avec une validation mémoire
 make test-sanitize
