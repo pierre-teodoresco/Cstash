@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-CsVector* cs_vector_create(size_t element_size, size_t capacity) {
+CsVector* cs_vector_create(size_t element_size, size_t capacity, void (*destructor)(void*)) {
     if (element_size == 0) return NULL;
 
     CsVector* vector = malloc(sizeof(CsVector));
@@ -14,6 +14,7 @@ CsVector* cs_vector_create(size_t element_size, size_t capacity) {
     vector->size = 0;
     vector->element_size = element_size;
     vector->data = malloc(element_size * vector->capacity);
+    vector->destructor = destructor;
     if (!vector->data) {
         free(vector);
         return NULL;
@@ -24,6 +25,8 @@ CsVector* cs_vector_create(size_t element_size, size_t capacity) {
 
 void cs_vector_destroy(CsVector* vector) {
     if (!vector) return;
+
+    cs_vector_clear(vector);
     free(vector->data);
     free(vector);
 }
@@ -42,6 +45,13 @@ CsResult cs_vector_reserve(CsVector* vector, size_t capacity) {
 
 void cs_vector_clear(CsVector* vector) {
     if (!vector) return;
+
+    if (vector->destructor) {
+        for (size_t i = 0; i < vector->size; i++) {
+            vector->destructor(cs_vector_get(vector, i));
+        }
+    }
+
     vector->size = 0;
 }
 
@@ -96,7 +106,7 @@ void* cs_vector_pop(CsVector* vector) {
 CsVector* cs_vector_clone(const CsVector* vector) {
     if (!vector) return NULL;
 
-    CsVector* copy = cs_vector_create(vector->element_size, vector->capacity);
+    CsVector* copy = cs_vector_create(vector->element_size, vector->capacity, vector->destructor);
     if (!copy) return NULL;
 
     memcpy(copy->data, vector->data, vector->element_size * vector->size);

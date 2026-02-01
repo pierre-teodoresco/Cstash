@@ -12,17 +12,19 @@ typedef struct {
     size_t size;
     size_t element_size;
     void* data;
+    void (*destructor)(void*);
 } CsVector;
 
 /**
  * Creates a new dynamic vector (takes ownership)
  * @param element_size Size in bytes of each element of the new vector
  * @param capacity Capacity of the new vector
+ * @param destructor Optional destructor that will be called on each element of vector
  * @return
  *  the newly created vector
  *  | NULL if it failed
  */
-CsVector* cs_vector_create(size_t element_size, size_t capacity);
+CsVector* cs_vector_create(size_t element_size, size_t capacity, void (*destructor)(void*));
 
 /**
  * Destroy the given vector

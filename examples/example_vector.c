@@ -3,9 +3,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct HeapAllocatedObject {
+    int* value;
+};
+
+void HeapAllocatedObjectDestructor(void* raw) {
+    struct HeapAllocatedObject* hao = (struct HeapAllocatedObject*)raw;
+    if (hao) {
+        free(hao->value);
+    }
+}
+
 int main(void) {
     // Créer un vector d'entiers avec capacité initiale de 4
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     printf("=== Push ===\n");
     // Ajouter des éléments (déclenchera une réallocation)
@@ -74,5 +85,14 @@ int main(void) {
     // Nettoyer
     cs_vector_destroy(vec);
     cs_vector_destroy(clone);
+
+    struct HeapAllocatedObject object;
+    object.value = malloc(sizeof(int));
+    *(object.value) = 5;
+
+    CsVector* haoVec = cs_vector_create(sizeof(struct HeapAllocatedObject), 1, &HeapAllocatedObjectDestructor);
+    cs_vector_push(haoVec, &object);
+    cs_vector_destroy(haoVec);
+
     return 0;
 }
