@@ -34,7 +34,7 @@
 
 ### Prérequis
 
-- **Clang**
+- **Clang 17+ (c23)**
 - **Make**
 
 ### Commandes

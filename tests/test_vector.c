@@ -53,6 +53,57 @@ void test_vector_destroy_null(void) {
     cs_vector_destroy(NULL);
 }
 
+// Destructor that increments counter
+static int destructor_call_count = 0;
+void destructor_counter(void* element) {
+    (void)element; // unused
+    destructor_call_count++;
+}
+
+void test_vector_destroy_with_destructor(void) {
+    // Test 1: Vector with destructor calls it for each element
+    CsVector* vec = cs_vector_create(sizeof(int), 4, destructor_counter);
+    ASSERT_NOT_NULL(vec);
+
+    // Push 3 elements
+    int val1 = 42, val2 = 100, val3 = 200;
+    ASSERT_EQ(cs_vector_push(vec, &val1), CS_SUCCESS);
+    ASSERT_EQ(cs_vector_push(vec, &val2), CS_SUCCESS);
+    ASSERT_EQ(cs_vector_push(vec, &val3), CS_SUCCESS);
+    ASSERT_EQ(vec->size, 3);
+
+    // Destroy vector - should call destructor 3 times
+    cs_vector_destroy(vec);
+    ASSERT_EQ(destructor_call_count, 3);
+
+    // Test 2: Vector without destructor (NULL) doesn't crash
+    destructor_call_count = 0;
+    CsVector* vec2 = cs_vector_create(sizeof(int), 4); // No destructor
+    ASSERT_NOT_NULL(vec2);
+
+    ASSERT_EQ(cs_vector_push(vec2, &val1), CS_SUCCESS);
+    ASSERT_EQ(cs_vector_push(vec2, &val2), CS_SUCCESS);
+
+    // Destroy vector - destructor should NOT be called
+    cs_vector_destroy(vec2);
+    ASSERT_EQ(destructor_call_count, 0);
+
+    // Test 3: Destructor called on clear (if implemented)
+    destructor_call_count = 0;
+    CsVector* vec3 = cs_vector_create(sizeof(int), 4, destructor_counter);
+    ASSERT_NOT_NULL(vec3);
+
+    ASSERT_EQ(cs_vector_push(vec3, &val1), CS_SUCCESS);
+    ASSERT_EQ(cs_vector_push(vec3, &val2), CS_SUCCESS);
+
+    // Clear should call destructor for each element
+    cs_vector_clear(vec3);
+    ASSERT_EQ(destructor_call_count, 2);
+    ASSERT_EQ(vec3->size, 0);
+
+    cs_vector_destroy(vec3);
+}
+
 // ========================================
 // Tests de push, pop et get
 // ========================================
@@ -519,6 +570,7 @@ int main(void) {
     RUN_TEST(test_vector_create_with_zero_capacity);
     RUN_TEST(test_vector_create_with_different_types);
     RUN_TEST(test_vector_destroy_null);
+    RUN_TEST(test_vector_destroy_with_destructor);
 
     printf("\n" COLOR_BLUE "========== PUSH, POP & GET ==========" COLOR_RESET "\n");
     RUN_TEST(test_vector_push_single);

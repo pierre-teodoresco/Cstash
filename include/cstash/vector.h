@@ -19,12 +19,24 @@ typedef struct {
  * Creates a new dynamic vector (takes ownership)
  * @param element_size Size in bytes of each element of the new vector
  * @param capacity Capacity of the new vector
- * @param destructor Optional destructor that will be called on each element of vector
+ * @param destructor Optional destructor that will be called on each element when the vector is destroyed.
+ *                   If not provided, defaults to NULL (no cleanup)
  * @return
  *  the newly created vector
  *  | NULL if it failed
+ *
+ * @note The destructor parameter is optional. You can call:
+ *       - cs_vector_create(sizeof(int), 10) without destructor
+ *       - cs_vector_create(sizeof(char*), 10, my_destructor) with destructor
  */
-CsVector* cs_vector_create(size_t element_size, size_t capacity, void (*destructor)(void*));
+CsVector* _cs_vector_create_impl(size_t element_size, size_t capacity, void (*destructor)(void*));
+
+// Helper - retourne le premier argument ou NULL
+#define _cs_vector_get_destructor_helper(destructor, ...) destructor
+
+// Macro to make destructor an optional parameter
+#define cs_vector_create(element_size, capacity, ...)                                                                  \
+    _cs_vector_create_impl(element_size, capacity, _cs_vector_get_destructor_helper(__VA_ARGS__ __VA_OPT__(, ) NULL))
 
 /**
  * Destroy the given vector

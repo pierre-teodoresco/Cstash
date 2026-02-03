@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-CsVector* cs_vector_create(size_t element_size, size_t capacity, void (*destructor)(void*)) {
+CsVector* _cs_vector_create_impl(size_t element_size, size_t capacity, void (*destructor)(void*)) {
     if (element_size == 0) return NULL;
 
     CsVector* vector = malloc(sizeof(CsVector));

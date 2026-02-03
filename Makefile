@@ -1,7 +1,7 @@
 # Compilateur et flags
 CC := clang
-CFLAGS := -Wall -Wextra -Werror -std=c11 -pedantic -O2
-CFLAGS_DEBUG := -Wall -Wextra -Werror -std=c11 -pedantic -g -O0 -fsanitize=address,undefined
+CFLAGS := -Wall -Wextra -Werror -std=c23 -pedantic -O2
+CFLAGS_DEBUG := -Wall -Wextra -Werror -std=c23 -pedantic -g -O0 -fsanitize=address,undefined
 INCLUDES := -Iinclude
 
 # Répertoires
