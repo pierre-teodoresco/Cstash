@@ -16,27 +16,17 @@ typedef struct {
 } CsVector;
 
 /**
- * Creates a new dynamic vector (takes ownership)
+ * Creates a new dynamic vector
  * @param element_size Size in bytes of each element of the new vector
  * @param capacity Capacity of the new vector
  * @param destructor Optional destructor that will be called on each element when the vector is destroyed.
- *                   If not provided, defaults to NULL (no cleanup)
+ * If NULL no cleanup is done on data
  * @return
  *  the newly created vector
  *  | NULL if it failed
  *
- * @note The destructor parameter is optional. You can call:
- *       - cs_vector_create(sizeof(int), 10) without destructor
- *       - cs_vector_create(sizeof(char*), 10, my_destructor) with destructor
  */
-CsVector* _cs_vector_create_impl(size_t element_size, size_t capacity, void (*destructor)(void*));
-
-// Helper - retourne le premier argument ou NULL
-#define _cs_vector_get_destructor_helper(destructor, ...) destructor
-
-// Macro to make destructor an optional parameter
-#define cs_vector_create(element_size, capacity, ...)                                                                  \
-    _cs_vector_create_impl(element_size, capacity, _cs_vector_get_destructor_helper(__VA_ARGS__ __VA_OPT__(, ) NULL))
+CsVector* cs_vector_create(size_t element_size, size_t capacity, void (*destructor)(void*));
 
 /**
  * Destroy the given vector
@@ -85,6 +75,7 @@ void* cs_vector_get(const CsVector* vector, size_t index);
 /**
  * Push an element at the end
  * @param vector Vector to push the new element to
+ * If a destructor is set, it copies the element. If not it just reference it
  * @param element New element to push to the vector
  * @return
  *  CS_SUCCESS
@@ -94,7 +85,7 @@ void* cs_vector_get(const CsVector* vector, size_t index);
 CsResult cs_vector_push(CsVector* vector, const void* element);
 
 /**
- * Pop the last element (takes ownership)
+ * Pop the last element
  * @param vector Vector to pop to
  * @return
  *  a volatile pointer to the popped element, will be overwritten at next push

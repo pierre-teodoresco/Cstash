@@ -7,7 +7,7 @@
 
 void bench_vector_create_bench(BenchContext* ctx) {
     for (size_t i = 0; i < ctx->ops_per_iteration; i++) {
-        CsVector* vec = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY);
+        CsVector* vec = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY, NULL);
         cs_vector_destroy(vec);
     }
 }
@@ -17,7 +17,7 @@ void bench_vector_create_bench(BenchContext* ctx) {
 // ============================================================================
 
 void bench_vector_push_setup(BenchContext* ctx) {
-    ctx->data = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY);
+    ctx->data = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY, NULL);
 }
 
 void bench_vector_push_bench(BenchContext* ctx) {
@@ -44,7 +44,7 @@ void bench_vector_push_realloc_setup(BenchContext* ctx) {
 
 void bench_vector_push_realloc_bench(BenchContext* ctx) {
     for (size_t i = 0; i < ctx->ops_per_iteration; i++) {
-        CsVector* vec = cs_vector_create(sizeof(int), 1);
+        CsVector* vec = cs_vector_create(sizeof(int), 1, NULL);
         int val = 1;
         cs_vector_push(vec, &val); // OK
         cs_vector_push(vec, &val); // Force reallocation
@@ -57,7 +57,7 @@ void bench_vector_push_realloc_bench(BenchContext* ctx) {
 // ============================================================================
 
 void bench_vector_get_setup(BenchContext* ctx) {
-    CsVector* vec = cs_vector_create(sizeof(int), 100);
+    CsVector* vec = cs_vector_create(sizeof(int), 100, NULL);
     for (int i = 0; i < 100; i++) {
         cs_vector_push(vec, &i);
     }
@@ -84,7 +84,7 @@ void bench_vector_pop_setup(BenchContext* ctx) {
     // Pré-créer tous les vecteurs avec suffisamment d'éléments
     CsVector** vectors = malloc(sizeof(CsVector*) * ctx->ops_per_iteration);
     for (size_t i = 0; i < ctx->ops_per_iteration; i++) {
-        vectors[i] = cs_vector_create(sizeof(int), 100);
+        vectors[i] = cs_vector_create(sizeof(int), 100, NULL);
         for (int j = 0; j < 100; j++) {
             cs_vector_push(vectors[i], &j);
         }
@@ -115,7 +115,7 @@ void bench_vector_reserve_setup(BenchContext* ctx) {
     // Créer un tableau de vecteurs pour forcer la réallocation à chaque fois
     CsVector** vectors = malloc(sizeof(CsVector*) * ctx->ops_per_iteration);
     for (size_t i = 0; i < ctx->ops_per_iteration; i++) {
-        vectors[i] = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY);
+        vectors[i] = cs_vector_create(sizeof(int), VECTOR_DEFAULT_CAPACITY, NULL);
     }
     ctx->data = vectors;
 }
@@ -143,7 +143,7 @@ void bench_vector_clear_setup(BenchContext* ctx) {
     // Pré-créer tous les vecteurs nécessaires
     CsVector** vectors = malloc(sizeof(CsVector*) * ctx->ops_per_iteration);
     for (size_t i = 0; i < ctx->ops_per_iteration; i++) {
-        vectors[i] = cs_vector_create(sizeof(int), 100);
+        vectors[i] = cs_vector_create(sizeof(int), 100, NULL);
         for (int j = 0; j < 100; j++) {
             cs_vector_push(vectors[i], &j);
         }
@@ -171,7 +171,7 @@ void bench_vector_clear_teardown(BenchContext* ctx) {
 // ============================================================================
 
 void bench_vector_clone_setup(BenchContext* ctx) {
-    CsVector* vec = cs_vector_create(sizeof(int), 100);
+    CsVector* vec = cs_vector_create(sizeof(int), 100, NULL);
     for (int i = 0; i < 100; i++) {
         cs_vector_push(vec, &i);
     }

@@ -7,7 +7,7 @@
 // ========================================
 
 void test_vector_create_destroy(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 8);
+    CsVector* vec = cs_vector_create(sizeof(int), 8, NULL);
     ASSERT_NOT_NULL(vec);
     ASSERT_EQ(vec->size, 0);
     ASSERT_EQ(vec->capacity, 8);
@@ -17,7 +17,7 @@ void test_vector_create_destroy(void) {
 }
 
 void test_vector_create_with_zero_capacity(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 0);
+    CsVector* vec = cs_vector_create(sizeof(int), 0, NULL);
     ASSERT_NOT_NULL(vec);
     ASSERT_EQ(vec->capacity, VECTOR_DEFAULT_CAPACITY);
     ASSERT_EQ(vec->size, 0);
@@ -26,13 +26,13 @@ void test_vector_create_with_zero_capacity(void) {
 
 void test_vector_create_with_different_types(void) {
     // Test avec double
-    CsVector* vec_double = cs_vector_create(sizeof(double), 4);
+    CsVector* vec_double = cs_vector_create(sizeof(double), 4, NULL);
     ASSERT_NOT_NULL(vec_double);
     ASSERT_EQ(vec_double->element_size, sizeof(double));
     cs_vector_destroy(vec_double);
 
     // Test avec char
-    CsVector* vec_char = cs_vector_create(sizeof(char), 16);
+    CsVector* vec_char = cs_vector_create(sizeof(char), 16, NULL);
     ASSERT_NOT_NULL(vec_char);
     ASSERT_EQ(vec_char->element_size, sizeof(char));
     cs_vector_destroy(vec_char);
@@ -42,7 +42,7 @@ void test_vector_create_with_different_types(void) {
         int x;
         int y;
     } Point;
-    CsVector* vec_point = cs_vector_create(sizeof(Point), 10);
+    CsVector* vec_point = cs_vector_create(sizeof(Point), 10, NULL);
     ASSERT_NOT_NULL(vec_point);
     ASSERT_EQ(vec_point->element_size, sizeof(Point));
     cs_vector_destroy(vec_point);
@@ -78,7 +78,7 @@ void test_vector_destroy_with_destructor(void) {
 
     // Test 2: Vector without destructor (NULL) doesn't crash
     destructor_call_count = 0;
-    CsVector* vec2 = cs_vector_create(sizeof(int), 4); // No destructor
+    CsVector* vec2 = cs_vector_create(sizeof(int), 4, NULL); // No destructor
     ASSERT_NOT_NULL(vec2);
 
     ASSERT_EQ(cs_vector_push(vec2, &val1), CS_SUCCESS);
@@ -109,7 +109,7 @@ void test_vector_destroy_with_destructor(void) {
 // ========================================
 
 void test_vector_push_single(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     int value = 42;
 
     CsResult result = cs_vector_push(vec, &value);
@@ -124,7 +124,7 @@ void test_vector_push_single(void) {
 }
 
 void test_vector_push_multiple(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     for (int i = 0; i < 10; i++) {
         CsResult result = cs_vector_push(vec, &i);
@@ -142,7 +142,7 @@ void test_vector_push_multiple(void) {
 }
 
 void test_vector_push_with_reallocation(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 2);
+    CsVector* vec = cs_vector_create(sizeof(int), 2, NULL);
     ASSERT_EQ(vec->capacity, 2);
 
     // Push au-delà de la capacité initiale
@@ -169,14 +169,14 @@ void test_vector_push_null_vector(void) {
 }
 
 void test_vector_push_null_element(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     CsResult result = cs_vector_push(vec, NULL);
     ASSERT_EQ(result, CS_NULL_POINTER);
     cs_vector_destroy(vec);
 }
 
 void test_vector_pop_single(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     int value = 99;
     cs_vector_push(vec, &value);
 
@@ -190,7 +190,7 @@ void test_vector_pop_single(void) {
 }
 
 void test_vector_pop_multiple(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     // Push 5 éléments
     for (int i = 0; i < 5; i++) {
@@ -210,7 +210,7 @@ void test_vector_pop_multiple(void) {
 }
 
 void test_vector_pop_empty_vector(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     void* popped = cs_vector_pop(vec);
     ASSERT_NULL(popped);
     free(popped);
@@ -223,7 +223,7 @@ void test_vector_pop_null_vector(void) {
 }
 
 void test_vector_get_valid_index(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     for (int i = 0; i < 3; i++) {
         cs_vector_push(vec, &i);
@@ -244,7 +244,7 @@ void test_vector_get_valid_index(void) {
 }
 
 void test_vector_get_out_of_bounds(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     int value = 42;
     cs_vector_push(vec, &value);
 
@@ -267,7 +267,7 @@ void test_vector_get_null_vector(void) {
 // ========================================
 
 void test_vector_reserve_increase(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     ASSERT_EQ(vec->capacity, 4);
 
     CsResult result = cs_vector_reserve(vec, 20);
@@ -279,7 +279,7 @@ void test_vector_reserve_increase(void) {
 }
 
 void test_vector_reserve_with_data(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     // Ajouter des données
     for (int i = 0; i < 3; i++) {
@@ -301,7 +301,7 @@ void test_vector_reserve_with_data(void) {
 }
 
 void test_vector_reserve_decrease(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 10);
+    CsVector* vec = cs_vector_create(sizeof(int), 10, NULL);
 
     for (int i = 0; i < 8; i++) {
         cs_vector_push(vec, &i);
@@ -331,7 +331,7 @@ void test_vector_reserve_null_vector(void) {
 // ========================================
 
 void test_vector_clear_empty_vector(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     size_t original_capacity = vec->capacity;
 
     cs_vector_clear(vec);
@@ -342,7 +342,7 @@ void test_vector_clear_empty_vector(void) {
 }
 
 void test_vector_clear_with_data(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     for (int i = 0; i < 10; i++) {
         cs_vector_push(vec, &i);
@@ -373,7 +373,7 @@ void test_vector_clear_null_vector(void) {
 // ========================================
 
 void test_vector_shrink_to_fit_basic(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 20);
+    CsVector* vec = cs_vector_create(sizeof(int), 20, NULL);
 
     for (int i = 0; i < 5; i++) {
         cs_vector_push(vec, &i);
@@ -396,7 +396,7 @@ void test_vector_shrink_to_fit_basic(void) {
 }
 
 void test_vector_shrink_to_fit_empty(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 10);
+    CsVector* vec = cs_vector_create(sizeof(int), 10, NULL);
 
     CsResult result = cs_vector_shrink_to_fit(vec);
     ASSERT_EQ(result, CS_SUCCESS);
@@ -415,7 +415,7 @@ void test_vector_shrink_to_fit_null_vector(void) {
 // ========================================
 
 void test_vector_clone_empty_vector(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 8);
+    CsVector* vec = cs_vector_create(sizeof(int), 8, NULL);
     CsVector* clone = cs_vector_clone(vec);
 
     ASSERT_NOT_NULL(clone);
@@ -429,7 +429,7 @@ void test_vector_clone_empty_vector(void) {
 }
 
 void test_vector_clone_with_data(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     for (int i = 0; i < 5; i++) {
         cs_vector_push(vec, &i);
@@ -464,7 +464,7 @@ void test_vector_clone_null_vector(void) {
 }
 
 void test_vector_clone_independence(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
     int value = 42;
     cs_vector_push(vec, &value);
 
@@ -494,7 +494,7 @@ void test_vector_with_structs(void) {
         char name[16];
     } Record;
 
-    CsVector* vec = cs_vector_create(sizeof(Record), 4);
+    CsVector* vec = cs_vector_create(sizeof(Record), 4, NULL);
 
     Record r1 = {1, 3.14, "first"};
     Record r2 = {2, 2.71, "second"};
@@ -518,7 +518,7 @@ void test_vector_with_structs(void) {
 // ========================================
 
 void test_vector_large(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 4);
+    CsVector* vec = cs_vector_create(sizeof(int), 4, NULL);
 
     // Push 1000 éléments
     for (int i = 0; i < 1000; i++) {
@@ -541,7 +541,7 @@ void test_vector_large(void) {
 }
 
 void test_vector_push_pop_cycle(void) {
-    CsVector* vec = cs_vector_create(sizeof(int), 2);
+    CsVector* vec = cs_vector_create(sizeof(int), 2, NULL);
 
     // Cycle de push/pop
     for (int cycle = 0; cycle < 100; cycle++) {
